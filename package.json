@@ -1,7 +1,7 @@
 {
 	"name": "create-nuxtus",
 	"description": "npx command for generating a new Nuxtus boilerplate website.",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"main": "create-app.js",
 	"repository": {
 		"type": "git",

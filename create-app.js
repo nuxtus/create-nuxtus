@@ -44,17 +44,13 @@ async function main() {
 		console.log("Removing unused files...")
 		execSync("npx rimraf ./.git ./package.json ./TODO")
 		fs.rmdirSync(path.join(projectPath, "bin"), { recursive: true })
-		fs.appendFile(
-			".gitignore",
-			path.join("server", ".env") + "\n" + path.join("client", ".env"),
-			function (err) {
-				if (err) throw err
-				console.log("Saved!")
-			}
-		)
+		fs.appendFileSync("./client/.gitignore", ".env", function (err) {
+			if (err) throw err
+		})
+		fs.writeFileSync("./server/.gitignore", ".env")
 
 		console.log(
-			"Nuxtus site is ready for use! Edit server/.env then start Directus."
+			"Nuxtus site is ready for use! For documentation see: https://github.com/nuxtus/nuxtus"
 		)
 	} catch (error) {
 		console.log(error)
