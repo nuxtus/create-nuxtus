@@ -1,0 +1,33 @@
+{
+	"name": "create-nuxtus",
+	"description": "npx command for generating a new Nuxtus boilerplate website.",
+	"version": "1.0.0",
+	"main": "create-app.js",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/nuxtus/create-nuxtus.git"
+	},
+	"keywords": [
+		"Directus",
+		"Nuxt",
+		"boilerplate",
+		"Tailwind",
+		"Tailwindcss"
+	],
+	"author": "Craig Harman",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/nuxtus/create-nuxtus/issues"
+	},
+	"homepage": "https://github.com/nuxtus/create-nuxtus#readme",
+	"bin": {
+		"create-nuxtus": "./create-app.js"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	},
+	"dependencies": {
+		"rimraf": "^3.0.2"
+	}
+}
