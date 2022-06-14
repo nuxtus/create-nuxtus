@@ -15,6 +15,7 @@ const projectName = process.argv[2]
 const currentPath = process.cwd()
 const projectPath = path.join(currentPath, projectName)
 const git_repo = "https://github.com/nuxtus/nuxtus"
+const branch = process.env.NUXTUS_BRANCH || "main"
 
 try {
 	fs.mkdirSync(projectPath)
@@ -32,7 +33,7 @@ try {
 async function main() {
 	try {
 		console.log("Downloading files...")
-		execSync(`git clone --depth 1 ${git_repo} ${projectPath}`)
+		execSync(`git clone --depth 1 -b ${branch} ${git_repo} ${projectPath}`)
 
 		process.chdir(projectPath)
 

@@ -11,3 +11,11 @@ npx create-nuxtus app-name
 > Replace `app-name` with the name of your project.
 
 For more details on Nuxtus visit the [Nuxtus Github repository here](https://github.com/nuxtus/nuxtus).
+
+## Developing/Debugging
+
+You can modify the branch the script uses by supplying an environment variable `NUXTUS_BRANCH` when executing the script:
+
+```bash
+$ NUXTUS_BRANCH=master create-app.js app-name
+```
