@@ -14,6 +14,23 @@ console.log(
 	chalk.green(figlet.textSync("nuxtus", { horizontalLayout: "full" }))
 )
 
+const currentNodeVersion = process.versions.node
+const semver = currentNodeVersion.split(".")
+const major = semver[0]
+
+if (major < 16) {
+	console.error(
+		chalk.red(
+			"You are running Node " +
+				currentNodeVersion +
+				".\n" +
+				"Create Nuxtus requires Node 14 or higher. \n" +
+				"Please update your version of Node."
+		)
+	)
+	process.exit(1)
+}
+
 if (process.argv.length < 3) {
 	console.log(chalk.red("You have to provide a name for your app."))
 	console.log("For example :")
