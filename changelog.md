@@ -2,6 +2,8 @@
 
 # 1.0.2
 
+- Execute as much in parallel as possible
+- Make CLI output pretty
 - Add branch to nuxtus git repo for easier debugging
 
 # 1.0.1
