@@ -24,7 +24,7 @@ if (major < 16) {
 			"You are running Node " +
 				currentNodeVersion +
 				".\n" +
-				"Create Nuxtus requires Node 14 or higher. \n" +
+				"Create Nuxtus requires Node 16 or higher. \n" +
 				"Please update your version of Node."
 		)
 	)
@@ -118,7 +118,6 @@ async function main() {
 
 				let cleanup = new Promise((resolve, reject) => {
 					execSync("npx rimraf ./.git ./package.json ./TODO")
-					fs.rmdirSync(path.join(projectPath, "bin"), { recursive: true })
 					fs.appendFileSync("./client/.gitignore", ".env", function (err) {
 						if (err) throw err
 					})
@@ -128,7 +127,37 @@ async function main() {
 					resolve()
 				})
 
-				Promise.all([directus, nuxt, cleanup]).then(() => {
+				Promise.all([directus, nuxt, cleanup]).then(;() => {
+					inquirer
+						.prompt([
+							{
+								type: "list",
+								name: "database",
+								message: "Select database type",
+								choices: ["SQLite", "Other"],
+							},
+						])
+						.then((answers) => {
+							if (answers.database === "SQLite") {
+								// TODO: Run migrations and start Directus/Nuxt
+							} else {
+								// TODO: Prompt user to configure database and run manually
+							}
+						})
+						.catch((error) => {
+							if (error.isTtyError) {
+								console.log(
+									chalk.red(
+										"Prompt couldn't be rendered in the current environment"
+									)
+								)
+							} else {
+								// Something else went wrong
+								console.log(chalk.red(error))
+							}
+						})
+
+					// TODO: This should only display after DB install
 					console.log(
 						chalk.green(
 							"\n🚀 Nuxtus site is ready for use! For documentation see: ",
@@ -138,28 +167,6 @@ async function main() {
 				})
 			}
 		)
-
-		// console.log("✅ Directus dependencies installed.")
-		// const nuxtSpinner = new Spinner("Installing Nuxt dependencies...").start()
-		// execSync("cd client && npm install")
-		// nuxtSpinner.stop()
-		// console.log("✅ Nuxt dependencies installed.")
-
-		// const rmSpinner = new Spinner("Removing unused files...").start()
-		// execSync("npx rimraf ./.git ./package.json ./TODO")
-		// fs.rmdirSync(path.join(projectPath, "bin"), { recursive: true })
-		// fs.appendFileSync("./client/.gitignore", ".env", function (err) {
-		// 	if (err) throw err
-		// })
-		// fs.writeFileSync("./server/.gitignore", ".env")
-		// rmSpinner.stop()
-		// console.log("✅ Clean up complete.")
-
-		// console.log(
-		// 	chalk.green(
-		// 		"🚀 Nuxtus site is ready for use! For documentation see: https://github.com/nuxtus/nuxtus"
-		// 	)
-		// )
 	} catch (error) {
 		console.log(chalk.red(error))
 	}
