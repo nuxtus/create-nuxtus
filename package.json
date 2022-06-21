@@ -1,8 +1,13 @@
 {
 	"name": "create-nuxtus",
 	"description": "npx command for generating a new Nuxtus boilerplate website.",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"main": "create-app.js",
+	"type": "module",
+	"engines": {
+		"node": "^16.11.0 || ^17.0.0 || ^18.0.0",
+		"npm": ">=8.5.0"
+	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/nuxtus/create-nuxtus.git"
@@ -28,6 +33,10 @@
 		"registry": "https://registry.npmjs.org/"
 	},
 	"dependencies": {
+		"chalk": "^5.0.1",
+		"cli-spinner": "^0.2.10",
+		"figlet": "^1.5.2",
+		"inquirer": "^8.2.4",
 		"rimraf": "^3.0.2"
 	}
 }
