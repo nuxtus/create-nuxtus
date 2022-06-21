@@ -127,7 +127,8 @@ async function main() {
 					resolve()
 				})
 
-				Promise.all([directus, nuxt, cleanup]).then(;() => {
+				Promise.all([directus, nuxt, cleanup]).then(() => {
+					console.log("\n")
 					inquirer
 						.prompt([
 							{
@@ -139,10 +140,35 @@ async function main() {
 						])
 						.then((answers) => {
 							if (answers.database === "SQLite") {
-								// TODO: Run migrations and start Directus/Nuxt
+								// Run migrations and start Directus/Nuxt
+								const dbSpinner = new Spinner("%s Running migrations...")
+								dbSpinner.start()
+								try {
+									execSync("cd server && npm run cli bootstrap", {
+										stdio: "ignore",
+									})
+									dbSpinner.stop()
+									execSync("npm start")
+								} catch (err) {
+									dbSpinner.stop()
+									console.log(
+										chalk.red("An error occured running migrations " + err)
+									)
+								}
 							} else {
-								// TODO: Prompt user to configure database and run manually
+								console.log(
+									"You will need to edit server/.env with your database details and then run " +
+										chalk.blueBright("npm run cli bootstrap") +
+										"."
+								)
+								// TODO: Allow auto configuration of database based on selection instead of manual prompt
 							}
+							console.log(
+								chalk.green(
+									"\n🚀 Nuxtus site is ready for use! For documentation see: ",
+									chalk.underline("https://github.com/nuxtus/nuxtus", "\n")
+								)
+							)
 						})
 						.catch((error) => {
 							if (error.isTtyError) {
@@ -156,14 +182,6 @@ async function main() {
 								console.log(chalk.red(error))
 							}
 						})
-
-					// TODO: This should only display after DB install
-					console.log(
-						chalk.green(
-							"\n🚀 Nuxtus site is ready for use! For documentation see: ",
-							chalk.underline("https://github.com/nuxtus/nuxtus", "\n")
-						)
-					)
 				})
 			}
 		)
