@@ -1,11 +1,38 @@
 #!/usr/bin/env node
 
-const { execSync } = require("child_process")
-const path = require("path")
-const fs = require("fs")
+import * as fs from "fs"
+import * as path from "path"
+
+import { exec, execSync } from "child_process"
+
+import { Spinner } from "cli-spinner"
+import chalk from "chalk"
+import figlet from "figlet"
+import inquirer from "inquirer"
+
+console.log(
+	chalk.green(figlet.textSync("nuxtus", { horizontalLayout: "full" }))
+)
+
+const currentNodeVersion = process.versions.node
+const semver = currentNodeVersion.split(".")
+const major = semver[0]
+
+if (major < 16) {
+	console.error(
+		chalk.red(
+			"You are running Node " +
+				currentNodeVersion +
+				".\n" +
+				"Create Nuxtus requires Node 16 or higher. \n" +
+				"Please update your version of Node."
+		)
+	)
+	process.exit(1)
+}
 
 if (process.argv.length < 3) {
-	console.log("You have to provide a name for your app.")
+	console.log(chalk.red("You have to provide a name for your app."))
 	console.log("For example :")
 	console.log("    npx create-nuxtus my-app")
 	process.exit(1)
@@ -15,13 +42,16 @@ const projectName = process.argv[2]
 const currentPath = process.cwd()
 const projectPath = path.join(currentPath, projectName)
 const git_repo = "https://github.com/nuxtus/nuxtus"
+const branch = process.env.NUXTUS_BRANCH || "main"
 
 try {
 	fs.mkdirSync(projectPath)
 } catch (err) {
 	if (err.code === "EEXIST") {
 		console.log(
-			`The folder ${projectName} already exist in the current directory, please try another name.`
+			chalk.red(
+				`The folder ${projectName} already exist in the current directory, please try another name.`
+			)
 		)
 	} else {
 		console.log(error)
@@ -31,29 +61,132 @@ try {
 
 async function main() {
 	try {
-		console.log("Downloading files...")
-		execSync(`git clone --depth 1 ${git_repo} ${projectPath}`)
+		Spinner.setDefaultSpinnerString(30)
+		const downloadSpinner = new Spinner("%s Retrieving Nuxtus boilerplate...")
+		downloadSpinner.start()
+		exec(
+			`git clone --depth 1 -b ${branch} ${git_repo} ${projectPath}`,
+			{
+				stdio: "ignore",
+			},
+			(error) => {
+				downloadSpinner.stop(true)
+				if (error) {
+					console.error(chalk.red(`Failed cloning repo: ${error}`))
+					process.exit()
+				}
+				process.chdir(projectPath)
+				console.log("✅ Nuxtus downloaded.")
 
-		process.chdir(projectPath)
+				const directusSpinner = new Spinner(
+					"%s Installing Directus dependencies..."
+				).start()
+				const nuxtSpinner = new Spinner(
+					"%s Installing Nuxt dependencies..."
+				).start()
+				const rmSpinner = new Spinner("%s Removing unused files...").start()
 
-		console.log("Installing Directus dependencies...")
-		execSync("cd server && npm install")
-		console.log("Installing Nuxt dependencies...")
-		execSync("cd client && npm install")
+				let directus = new Promise((resolve, reject) =>
+					exec(
+						"cd server && npm install",
+						{
+							stdio: "ignore",
+						},
+						(error) => {
+							directusSpinner.stop(true)
+							if (error) {
+								console.error(chalk.red(`Failed installing Directus: ${error}`))
+								reject(error)
+							}
+							console.log("✅ Directus dependencies installed.")
+							resolve()
+						}
+					)
+				)
 
-		console.log("Removing unused files...")
-		execSync("npx rimraf ./.git ./package.json ./TODO")
-		fs.rmdirSync(path.join(projectPath, "bin"), { recursive: true })
-		fs.appendFileSync("./client/.gitignore", ".env", function (err) {
-			if (err) throw err
-		})
-		fs.writeFileSync("./server/.gitignore", ".env")
+				let nuxt = new Promise((resolve, reject) =>
+					exec("cd client && npm install", { stdio: "ignore" }, (error) => {
+						nuxtSpinner.stop(true)
+						if (error) {
+							console.error(chalk.red(`Failed installing Nuxt: ${error}`))
+							reject(error)
+						}
+						console.log("✅ Nuxt dependencies installed.")
+						resolve()
+					})
+				)
 
-		console.log(
-			"Nuxtus site is ready for use! For documentation see: https://github.com/nuxtus/nuxtus"
+				let cleanup = new Promise((resolve, reject) => {
+					execSync("npx rimraf ./.git ./package.json ./TODO")
+					fs.appendFileSync("./client/.gitignore", ".env", function (err) {
+						if (err) throw err
+					})
+					fs.writeFileSync("./server/.gitignore", ".env")
+					rmSpinner.stop(true)
+					console.log("✅ Clean up complete.")
+					resolve()
+				})
+
+				Promise.all([directus, nuxt, cleanup]).then(() => {
+					console.log("\n")
+					inquirer
+						.prompt([
+							{
+								type: "list",
+								name: "database",
+								message: "Select database type",
+								choices: ["SQLite", "Other"],
+							},
+						])
+						.then((answers) => {
+							if (answers.database === "SQLite") {
+								// Run migrations and start Directus/Nuxt
+								const dbSpinner = new Spinner("%s Running migrations...")
+								dbSpinner.start()
+								try {
+									execSync("cd server && npm run cli bootstrap", {
+										stdio: "ignore",
+									})
+									dbSpinner.stop()
+									execSync("npm start")
+								} catch (err) {
+									dbSpinner.stop()
+									console.log(
+										chalk.red("An error occured running migrations " + err)
+									)
+								}
+							} else {
+								console.log(
+									"You will need to edit server/.env with your database details and then run " +
+										chalk.blueBright("npm run cli bootstrap") +
+										"."
+								)
+								// TODO: Allow auto configuration of database based on selection instead of manual prompt
+							}
+							console.log(
+								chalk.green(
+									"\n🚀 Nuxtus site is ready for use! For documentation see: ",
+									chalk.underline("https://github.com/nuxtus/nuxtus", "\n")
+								)
+							)
+						})
+						.catch((error) => {
+							if (error.isTtyError) {
+								console.log(
+									chalk.red(
+										"Prompt couldn't be rendered in the current environment"
+									)
+								)
+							} else {
+								// Something else went wrong
+								console.log(chalk.red(error))
+							}
+						})
+				})
+			}
 		)
 	} catch (error) {
-		console.log(error)
+		console.log(chalk.red(error))
 	}
 }
 main()
