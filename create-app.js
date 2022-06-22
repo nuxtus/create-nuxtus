@@ -117,7 +117,7 @@ async function main() {
 				)
 
 				let cleanup = new Promise((resolve, reject) => {
-					execSync("npx rimraf ./.git ./package.json ./TODO")
+					execSync("npx rimraf ./.git ./TODO ./node_modules")
 					fs.appendFileSync("./client/.gitignore", ".env", function (err) {
 						if (err) throw err
 					})
@@ -128,7 +128,6 @@ async function main() {
 				})
 
 				Promise.all([directus, nuxt, cleanup]).then(() => {
-					console.log("\n")
 					inquirer
 						.prompt([
 							{
@@ -144,30 +143,37 @@ async function main() {
 								const dbSpinner = new Spinner("%s Running migrations...")
 								dbSpinner.start()
 								try {
+									execSync("npm install", { stdio: "ignore" })
 									execSync("cd server && npm run cli bootstrap", {
 										stdio: "ignore",
 									})
-									dbSpinner.stop()
-									execSync("npm start")
+									dbSpinner.stop(true)
+									console.log("✅ Database migrated.")
 								} catch (err) {
-									dbSpinner.stop()
+									dbSpinner.stop(true)
 									console.log(
-										chalk.red("An error occured running migrations " + err)
+										chalk.red("An error occurred running migrations " + err)
 									)
 								}
 							} else {
+								console.log("\n")
 								console.log(
-									"You will need to edit server/.env with your database details and then run " +
-										chalk.blueBright("npm run cli bootstrap") +
-										"."
+									chalk.bold(
+										"You will need to edit server/.env with your database details and then run " +
+											chalk.blueBright("npm run cli bootstrap") +
+											"."
+									)
 								)
 								// TODO: Allow auto configuration of database based on selection instead of manual prompt
 							}
+							console.log("\n")
 							console.log(
-								chalk.green(
-									"\n🚀 Nuxtus site is ready for use! For documentation see: ",
-									chalk.underline("https://github.com/nuxtus/nuxtus", "\n")
-								)
+								chalk.green("🚀 Nuxtus site is ready for use!\n\n") +
+									chalk.white(`cd ${projectName}` + "\nnpm start\n\n") +
+									chalk.green(
+										"For documentation see: ",
+										chalk.underline("https://github.com/nuxtus/nuxtus", "\n")
+									)
 							)
 						})
 						.catch((error) => {
