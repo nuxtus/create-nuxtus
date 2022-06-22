@@ -1,5 +1,9 @@
 # Create Nuxtus
 
+# 1.0.4
+
+- Add npm start command on successful creation
+
 # 1.0.3
 
 - Fix issue where package.json should not be removed
