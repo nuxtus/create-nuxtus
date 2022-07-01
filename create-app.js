@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import * as childProcess from "child_process"
 import * as fs from "fs"
 import * as path from "path"
 
@@ -9,6 +10,24 @@ import { Spinner } from "cli-spinner"
 import chalk from "chalk"
 import figlet from "figlet"
 import inquirer from "inquirer"
+
+const startDirectus = function () {
+	const process = childProcess.spawn("npx", ["directus", "start"], {
+		cwd: "./server",
+	})
+
+	process.stdout.on("data", (data) => {
+		console.log(data.toString())
+	})
+
+	process.stderr.on("data", (data) => {
+		console.error(data.toString())
+	})
+
+	process.on("exit", (code) => {
+		console.log(`Directus exited with code ${code}`)
+	})
+}
 
 console.log(
 	chalk.green(figlet.textSync("nuxtus", { horizontalLayout: "full" }))
@@ -144,11 +163,13 @@ async function main() {
 								dbSpinner.start()
 								try {
 									execSync("npm install", { stdio: "ignore" })
-									execSync("cd server && npm run cli bootstrap", {
-										stdio: "ignore",
-									})
+									// execSync("cd server && npm run cli bootstrap", {
+									// 	stdio: "ignore",
+									// })
 									dbSpinner.stop(true)
 									console.log("✅ Database migrated.")
+
+									startDirectus()
 								} catch (err) {
 									dbSpinner.stop(true)
 									console.log(
