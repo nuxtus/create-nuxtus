@@ -29,6 +29,44 @@ const startDirectus = function () {
 	})
 }
 
+const autoCollections = function () {
+	const hookSpinner = new Spinner("%s Installing Nuxtus hook...").start()
+
+	execSync(
+		"cd server && npm install @nuxtus/directus-extension-nuxtus-hook",
+		{
+			stdio: "ignore",
+		},
+		(error) => {
+			const source = path.join(
+				"server",
+				"node_modules",
+				"@nuxtus",
+				"directus-extension-nuxtus-hook",
+				"dist",
+				"index.js"
+			)
+			const subDest = path.join(
+				"server",
+				"extensions",
+				"hooks",
+				"directus-extension-nuxtus-hook"
+			)
+			fs.mkdirSync(subDest)
+			const dest = path.join(subDest, "index.js")
+			fs.copyFileSync(source, dest)
+			hookSpinner.stop(true)
+			if (error) {
+				console.error(chalk.red(`Failed installing Nuxtus hook: ${error}`))
+				return
+			}
+			console.log(
+				"✅ Nuxtus Directus hook installed. Pages will automatically be created when you create a Collection in Directus."
+			)
+		}
+	)
+}
+
 console.log(
 	chalk.green(figlet.textSync("nuxtus", { horizontalLayout: "full" }))
 )
@@ -155,6 +193,13 @@ async function main() {
 								message: "Select database type",
 								choices: ["SQLite", "Other"],
 							},
+							{
+								type: "confirm",
+								name: "autoCollections",
+								message: "Create Nuxt pages automatically?",
+								choices: ["Y", "n"],
+								default: "Y",
+							},
 						])
 						.then((answers) => {
 							if (answers.database === "SQLite") {
@@ -163,13 +208,11 @@ async function main() {
 								dbSpinner.start()
 								try {
 									execSync("npm install", { stdio: "ignore" })
-									// execSync("cd server && npm run cli bootstrap", {
-									// 	stdio: "ignore",
-									// })
+									execSync("cd server && npm run cli bootstrap", {
+										stdio: "ignore",
+									})
 									dbSpinner.stop(true)
 									console.log("✅ Database migrated.")
-
-									startDirectus()
 								} catch (err) {
 									dbSpinner.stop(true)
 									console.log(
@@ -186,6 +229,9 @@ async function main() {
 									)
 								)
 								// TODO: Allow auto configuration of database based on selection instead of manual prompt
+							}
+							if (answers.autoCollections) {
+								autoCollections()
 							}
 							console.log("\n")
 							console.log(
