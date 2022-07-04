@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import * as childProcess from "child_process"
 import * as fs from "fs"
 import * as path from "path"
 
@@ -9,6 +10,62 @@ import { Spinner } from "cli-spinner"
 import chalk from "chalk"
 import figlet from "figlet"
 import inquirer from "inquirer"
+
+const startDirectus = function () {
+	const process = childProcess.spawn("npx", ["directus", "start"], {
+		cwd: "./server",
+	})
+
+	process.stdout.on("data", (data) => {
+		console.log(data.toString())
+	})
+
+	process.stderr.on("data", (data) => {
+		console.error(data.toString())
+	})
+
+	process.on("exit", (code) => {
+		console.log(`Directus exited with code ${code}`)
+	})
+}
+
+const autoCollections = function () {
+	const hookSpinner = new Spinner("%s Installing Nuxtus hook...").start()
+
+	try {
+		execSync(
+			"cd server && npm install @nuxtus/directus-extension-nuxtus-hook --save-dev",
+			{
+				stdio: "ignore",
+			}
+		)
+
+		const source = path.join(
+			"server",
+			"node_modules",
+			"@nuxtus",
+			"directus-extension-nuxtus-hook",
+			"dist",
+			"index.js"
+		)
+		const subDest = path.join(
+			"server",
+			"extensions",
+			"hooks",
+			"directus-extension-nuxtus-hook"
+		)
+		fs.mkdirSync(subDest)
+		const dest = path.join(subDest, "index.js")
+		fs.copyFileSync(source, dest)
+		hookSpinner.stop(true)
+	} catch (err) {
+		console.error(chalk.red(`Failed installing Nuxtus hook: ${error}`))
+		return
+	}
+	console.log(
+		"✅ Nuxtus Directus hook installed. Pages will automatically be created when you create a Collection in Directus."
+	)
+}
 
 console.log(
 	chalk.green(figlet.textSync("nuxtus", { horizontalLayout: "full" }))
@@ -136,6 +193,13 @@ async function main() {
 								message: "Select database type",
 								choices: ["SQLite", "Other"],
 							},
+							{
+								type: "confirm",
+								name: "autoCollections",
+								message: "Create Nuxt pages automatically?",
+								choices: ["Y", "n"],
+								default: "Y",
+							},
 						])
 						.then((answers) => {
 							if (answers.database === "SQLite") {
@@ -165,6 +229,9 @@ async function main() {
 									)
 								)
 								// TODO: Allow auto configuration of database based on selection instead of manual prompt
+							}
+							if (answers.autoCollections) {
+								autoCollections()
 							}
 							console.log("\n")
 							console.log(
