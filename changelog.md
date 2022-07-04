@@ -1,5 +1,9 @@
 # Create Nuxtus
 
+# 1.0.5
+
+- Prompt user to create flow to allow automatic creation of pages when collections are created
+
 # 1.0.4
 
 - Add npm start command on successful creation
