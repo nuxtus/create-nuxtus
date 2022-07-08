@@ -10,7 +10,7 @@ npx create-nuxtus app-name
 
 > Replace `app-name` with the name of your project.
 
-For more details on Nuxtus visit the [Nuxtus Github repository here](https://github.com/nuxtus/nuxtus).
+For more details on Nuxtus (including documentation) visit the [Nuxtus Github repository here](https://github.com/nuxtus/nuxtus).
 
 ## Developing/Debugging
 
