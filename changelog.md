@@ -1,5 +1,9 @@
 # Create Nuxtus
 
+# 1.0.6
+
+- Remove /clients/interfaces/nuxtus.ts from gitignore on creation
+
 # 1.0.5
 
 - Prompt user to create flow to allow automatic creation of pages when collections are created
