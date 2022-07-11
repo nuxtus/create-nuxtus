@@ -179,6 +179,16 @@ async function main() {
 						if (err) throw err
 					})
 					fs.writeFileSync("./server/.gitignore", ".env")
+					// Remove interface/nuxtus.ts from gitignore
+					const interfaceFile = "./.gitignore"
+					var gitIgnore = fs.readFileSync(interfaceFile, "utf-8")
+					// replace 'world' together with the new line character with empty
+					var newGitIgnore = gitIgnore.replace(
+						"client/interfaces/nuxtus.ts\n",
+						""
+					)
+					fs.writeFileSync(interfaceFile, newGitIgnore, "utf-8")
+					//////////
 					rmSpinner.stop(true)
 					console.log("✅ Clean up complete.")
 					resolve()
