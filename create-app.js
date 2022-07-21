@@ -101,6 +101,11 @@ const projectPath = path.join(currentPath, projectName)
 const git_repo = "https://github.com/nuxtus/nuxtus"
 const branch = process.env.NUXTUS_BRANCH || "main"
 
+let options = {
+	dbType: "SQLite",
+	autoCollections: true,
+}
+
 try {
 	fs.mkdirSync(projectPath)
 } catch (err) {
@@ -116,8 +121,41 @@ try {
 	process.exit(1)
 }
 
+async function askOptions() {
+	options = await inquirer
+		.prompt([
+			{
+				type: "list",
+				name: "dbType",
+				message: "Select database type",
+				choices: ["SQLite", "Other"],
+			},
+			{
+				type: "confirm",
+				name: "autoCollections",
+				message: "Create Nuxt pages and types automatically?",
+				choices: ["Y", "n"],
+				default: "Y",
+			},
+		])
+		.catch((error) => {
+			if (error.isTtyError) {
+				console.log(
+					chalk.red("Prompt couldn't be rendered in the current environment")
+				)
+			} else {
+				// Something else went wrong
+				console.log(chalk.red(error))
+			}
+		})
+
+	return
+}
+
 async function main() {
 	try {
+		await askOptions()
+		console.log()
 		Spinner.setDefaultSpinnerString(30)
 		const downloadSpinner = new Spinner("%s Retrieving Nuxtus boilerplate...")
 		downloadSpinner.start()
@@ -174,7 +212,7 @@ async function main() {
 				)
 
 				let cleanup = new Promise((resolve, reject) => {
-					execSync("npx rimraf ./.git ./TODO ./node_modules")
+					execSync("npx rimraf ./.git ./TODO ./node_modules ./github")
 					fs.appendFileSync("./client/.gitignore", ".env", function (err) {
 						if (err) throw err
 					})
@@ -195,76 +233,50 @@ async function main() {
 				})
 
 				Promise.all([directus, nuxt, cleanup]).then(() => {
-					inquirer
-						.prompt([
-							{
-								type: "list",
-								name: "database",
-								message: "Select database type",
-								choices: ["SQLite", "Other"],
-							},
-							{
-								type: "confirm",
-								name: "autoCollections",
-								message: "Create Nuxt pages automatically?",
-								choices: ["Y", "n"],
-								default: "Y",
-							},
-						])
-						.then((answers) => {
-							if (answers.database === "SQLite") {
-								// Run migrations and start Directus/Nuxt
-								const dbSpinner = new Spinner("%s Running migrations...")
-								dbSpinner.start()
-								try {
-									execSync("npm install", { stdio: "ignore" })
-									execSync("cd server && npm run cli bootstrap", {
-										stdio: "ignore",
-									})
-									dbSpinner.stop(true)
-									console.log("✅ Database migrated.")
-								} catch (err) {
-									dbSpinner.stop(true)
-									console.log(
-										chalk.red("An error occurred running migrations " + err)
-									)
-								}
-							} else {
-								console.log("\n")
-								console.log(
-									chalk.bold(
-										"You will need to edit server/.env with your database details and then run " +
-											chalk.blueBright("npm run cli bootstrap") +
-											"."
-									)
-								)
-								// TODO: Allow auto configuration of database based on selection instead of manual prompt
-							}
-							if (answers.autoCollections) {
-								autoCollections()
-							}
-							console.log("\n")
+					if (options.dbType === "SQLite") {
+						// Run migrations and start Directus/Nuxt
+						const dbSpinner = new Spinner("%s Running migrations...").start()
+						try {
+							execSync("npm install", { stdio: "ignore" })
+							execSync("cd server && npm run cli bootstrap", {
+								stdio: "ignore",
+							})
+							dbSpinner.stop(true)
+							console.log("✅ Database migrated.")
+						} catch (err) {
+							dbSpinner.stop(true)
 							console.log(
-								chalk.green("🚀 Nuxtus site is ready for use!\n\n") +
-									chalk.white(`cd ${projectName}` + "\nnpm start\n\n") +
-									chalk.green(
-										"For documentation see: ",
-										chalk.underline("https://github.com/nuxtus/nuxtus", "\n")
-									)
+								chalk.red("An error occurred running migrations " + err)
 							)
-						})
-						.catch((error) => {
-							if (error.isTtyError) {
-								console.log(
-									chalk.red(
-										"Prompt couldn't be rendered in the current environment"
-									)
-								)
-							} else {
-								// Something else went wrong
-								console.log(chalk.red(error))
-							}
-						})
+						}
+					} else {
+						console.log("\n")
+						console.log(
+							chalk.bold(
+								"You will need to edit server/.env with your database details and then run " +
+									chalk.blueBright("npm run cli bootstrap") +
+									"."
+							)
+						)
+						// TODO: Allow auto configuration of database based on selection instead of manual prompt
+					}
+					if (options.autoCollections) {
+						autoCollections()
+					}
+					console.log("\n")
+					console.log(
+						chalk.green("🚀 Nuxtus site is ready for use!\n\n") +
+							chalk.blueBright("Directus admin login\n") +
+							chalk.blue(`User: `) +
+							chalk.white("admin@example.com") +
+							chalk.blue(` Password: `) +
+							chalk.white("password\n\n") +
+							chalk.white(`cd ${projectName}` + "\nnpm start\n\n") +
+							chalk.green(
+								"For documentation see: ",
+								chalk.underline("https://github.com/nuxtus/nuxtus", "\n")
+							)
+					)
 				})
 			}
 		)
@@ -272,4 +284,5 @@ async function main() {
 		console.log(chalk.red(error))
 	}
 }
+
 main()
