@@ -267,9 +267,9 @@ async function main() {
 					console.log(
 						chalk.green("🚀 Nuxtus site is ready for use!\n\n") +
 							chalk.blueBright("Directus admin login\n") +
-							chalk.blue(`User: `) +
+							chalk.bold(`User: `) +
 							chalk.white("admin@example.com") +
-							chalk.blue(` Password: `) +
+							chalk.bold(` Password: `) +
 							chalk.white("password\n\n") +
 							chalk.white(`cd ${projectName}` + "\nnpm start\n\n") +
 							chalk.green(
