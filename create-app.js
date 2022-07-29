@@ -212,7 +212,7 @@ async function main() {
 				)
 
 				let cleanup = new Promise((resolve, reject) => {
-					execSync("npx rimraf ./.git ./TODO ./node_modules ./github")
+					execSync("npx rimraf ./.git ./TODO ./node_modules ./.github")
 					fs.appendFileSync("./client/.gitignore", ".env", function (err) {
 						if (err) throw err
 					})
@@ -220,11 +220,14 @@ async function main() {
 					// Remove interface/nuxtus.ts from gitignore
 					const interfaceFile = "./.gitignore"
 					var gitIgnore = fs.readFileSync(interfaceFile, "utf-8")
-					// replace 'world' together with the new line character with empty
+					// replace git ignore rules that are just for nuxtus development
+					// TODO: Going through file 3 times, replace with a regex
 					var newGitIgnore = gitIgnore.replace(
 						"client/interfaces/nuxtus.ts\n",
 						""
 					)
+					newGitIgnore.replace("package-lock.json\n", "")
+					newGitIgnore.replace("server/extensions/hooks/*\n", "")
 					fs.writeFileSync(interfaceFile, newGitIgnore, "utf-8")
 					//////////
 					rmSpinner.stop(true)
