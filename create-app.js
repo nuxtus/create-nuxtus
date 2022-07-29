@@ -212,7 +212,7 @@ async function main() {
 				)
 
 				let cleanup = new Promise((resolve, reject) => {
-					execSync("npx rimraf ./.git ./TODO ./node_modules ./.github")
+					execSync("npx rimraf ./.git ./TODO ./node_modules ./.github CHANGELOG.md")
 					fs.appendFileSync("./client/.gitignore", ".env", function (err) {
 						if (err) throw err
 					})
