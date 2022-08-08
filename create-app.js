@@ -221,13 +221,10 @@ async function main() {
 					const interfaceFile = "./.gitignore"
 					var gitIgnore = fs.readFileSync(interfaceFile, "utf-8")
 					// replace git ignore rules that are just for nuxtus development
-					// TODO: Going through file 3 times, replace with a regex
 					var newGitIgnore = gitIgnore.replace(
-						"client/interfaces/nuxtus.ts\n",
+						/client\/interfaces\/nuxtus.ts\n/gm|/package-lock.json\n/gm|/server\/extensions\/hooks\/*\n/gm|/client\/pages\/*\n/gm,
 						""
 					)
-					newGitIgnore.replace("package-lock.json\n", "")
-					newGitIgnore.replace("server/extensions/hooks/*\n", "")
 					fs.writeFileSync(interfaceFile, newGitIgnore, "utf-8")
 					//////////
 					rmSpinner.stop(true)
@@ -277,7 +274,7 @@ async function main() {
 							chalk.white(`cd ${projectName}` + "\nnpm start\n\n") +
 							chalk.green(
 								"For documentation see: ",
-								chalk.underline("https://github.com/nuxtus/nuxtus", "\n")
+								chalk.underline("https://nuxtus.com", "\n")
 							)
 					)
 				})
