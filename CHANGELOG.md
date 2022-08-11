@@ -1,5 +1,17 @@
 Changelog
 
+## [1.1.1](https://github.com/nuxtus/create-nuxtus/compare/v1.1.0...v1.1.1) (2022-08-11)
+
+
+### Bug Fixes
+
+* :bug: correctly remove .github folder ([300e91a](https://github.com/nuxtus/create-nuxtus/commit/300e91a44738af64ec012526501336638d0fb947))
+
+
+### Performance Improvements
+
+* :zap: remote CHANGELOG.md ([8ab385d](https://github.com/nuxtus/create-nuxtus/commit/8ab385d12adb78092c8c8da07eee3b6001d7160e))
+
 # [1.1.0](https://github.com/nuxtus/create-nuxtus/compare/v1.0.6...v1.1.0) (2022-07-21)
 
 
