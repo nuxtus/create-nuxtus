@@ -212,7 +212,7 @@ async function main() {
 				)
 
 				let cleanup = new Promise((resolve, reject) => {
-					execSync("npx rimraf ./.git ./TODO ./node_modules ./github")
+					execSync("npx rimraf ./.git ./TODO ./node_modules ./.github CHANGELOG.md")
 					fs.appendFileSync("./client/.gitignore", ".env", function (err) {
 						if (err) throw err
 					})
@@ -220,9 +220,9 @@ async function main() {
 					// Remove interface/nuxtus.ts from gitignore
 					const interfaceFile = "./.gitignore"
 					var gitIgnore = fs.readFileSync(interfaceFile, "utf-8")
-					// replace 'world' together with the new line character with empty
+					// replace git ignore rules that are just for nuxtus development
 					var newGitIgnore = gitIgnore.replace(
-						"client/interfaces/nuxtus.ts\n",
+						/client\/interfaces\/nuxtus.ts\n/gm|/package-lock.json\n/gm|/server\/extensions\/hooks\/*\n/gm|/client\/pages\/*\n/gm,
 						""
 					)
 					fs.writeFileSync(interfaceFile, newGitIgnore, "utf-8")
@@ -274,7 +274,7 @@ async function main() {
 							chalk.white(`cd ${projectName}` + "\nnpm start\n\n") +
 							chalk.green(
 								"For documentation see: ",
-								chalk.underline("https://github.com/nuxtus/nuxtus", "\n")
+								chalk.underline("https://nuxtus.com", "\n")
 							)
 					)
 				})
