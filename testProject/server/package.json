@@ -1,0 +1,19 @@
+{
+  "name": "testProject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "directus": "^9.15.1",
+    "sqlite3": "^5.0.11"
+  },
+  "devDependencies": {
+    "@nuxtus/directus-extension-nuxtus-hook": "^1.2.0"
+  }
+}

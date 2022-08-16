@@ -3,12 +3,15 @@
 import * as fs from "fs"
 import * as path from "path"
 
+import { ProjectType, updatePackageJson } from "./lib/util.js"
 // import { exec, execSync } from "child_process"
-import { installDirectus, installDirectusHook } from "./lib/directus"
+import { installDirectus, installDirectusHook } from "./lib/directus.js"
 
 import chalk from "chalk"
 import figlet from "figlet"
-import ora from "ora"
+
+// import { installNuxt } from "./lib/nuxt.js"
+// import ora from "ora"
 
 console.log(
 	chalk.green(figlet.textSync("nuxtus", { horizontalLayout: "full" }))
@@ -34,20 +37,15 @@ if (major < 16) {
 if (process.argv.length < 3) {
 	console.log(chalk.red("You have to provide a name for your app."))
 	console.log("For example :")
-	console.log("    npx create-nuxtus my-app")
+  console.log("    npx create-nuxtus " + chalk.bold("my-app"))
 	process.exit(1)
 }
 
 const projectName = process.argv[2]
 const currentPath = process.cwd()
 const projectPath = path.join(currentPath, projectName)
-const git_repo = "https://github.com/nuxtus/nuxtus"
-const branch = process.env.NUXTUS_BRANCH || "main"
-
-let options = {
-	dbType: "SQLite",
-	autoCollections: true,
-}
+// const git_repo = "https://github.com/nuxtus/nuxtus"
+// const branch = process.env.NUXTUS_BRANCH || "main"
 
 try {
 	fs.mkdirSync(projectPath)
@@ -66,34 +64,41 @@ try {
 
 async function main() {
 	try {
-		const directusSpinner = ora(
-			"%s Installing Directus dependencies..."
-		).start()
-		const nuxtSpinner = ora(
-			"%s Installing Nuxt dependencies..."
-		).start()
-		const rmSpinner = ora("%s Removing unused files...").start()
+		// const directusSpinner = ora(
+		// 	"Installing Directus..."
+		// ).start()
+		// const rmSpinner = ora("Removing unused files...").start()
 
 		// TODO: Change all spinner success/fail to ora as below
-		let directus = installDirectus().then(() => {
-			// TODO: Replace "name": "server" in package.json with "name": ${packageName}
-			directusSpinner.succeed("Directus dependencies installed.")
-		}).catch((error) => {
-			directusSpinner.fail(`Failed installing Directus: ${error}`)
-			return;
-		})
+		installDirectus(projectName).then(() => {
+      // Replace "name": "server" in package.json with "name": ${packageName}
+      updatePackageJson(projectName, ProjectType.Directus)
+      // directusSpinner.succeed("Directus installed.")
+      installDirectusHook(projectName)
+    }).catch((error) => {
+      // console.error(error)
+      console.error(chalk.red(`Failed installing Nuxtus hook: ${error}`))
+			// directusSpinner.fail(`Failed installing Directus: ${error}`)
+			return
+    })
 
-				// let nuxt = new Promise((resolve, reject) =>
-				// 	exec("cd client && npm install", { stdio: "ignore" }, (error) => {
-				// 		nuxtSpinner.stop(true)
-				// 		if (error) {
-				// 			console.error(chalk.red(`Failed installing Nuxt: ${error}`))
-				// 			reject(error)
-				// 		}
-				// 		console.log("✅ Nuxt dependencies installed.")
-				// 		resolve()
-				// 	})
-				// )
+    // console.log(directus)
+
+    // const nuxtSpinner = ora(
+		// 	"Installing Nuxt"
+		// ).start()
+    // installNuxt(projectName).then(() => {
+    //   updatePackageJson(projectName, ProjectType.Nuxt)
+
+    //   // TODO: Install Tailwind CSS here
+
+    //   nuxtSpinner.succeed("Nuxt installed.")
+    // }).catch((error) => {
+    //   console.error(chalk.red(`Failed installing Nuxt: ${error}`))
+    //   return
+    // })
+
+    // TODO: Can run npm install for nuxt and root nuxtus in parallel
 
 				// let cleanup = new Promise((resolve, reject) => {
 				// 	execSync("npx rimraf ./.git ./TODO ./node_modules ./.github CHANGELOG.md")
@@ -119,7 +124,7 @@ async function main() {
 				// Promise.all([directus, nuxt, cleanup]).then(() => {
 				// 	if (options.dbType === "SQLite") {
 				// 		// Run migrations and start Directus/Nuxt
-				// 		const dbSpinner = ora("%s Running migrations...").start()
+				// 		const dbSpinner = ora("Running migrations...").start()
 				// 		try {
 				// 			execSync("npm install", { stdio: "ignore" })
 				// 			execSync("cd server && npm run cli bootstrap", {

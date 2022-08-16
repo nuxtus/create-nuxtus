@@ -2,11 +2,10 @@
 	"name": "create-nuxtus",
 	"description": "npx command for generating a new Nuxtus boilerplate website.",
 	"version": "1.1.1",
-	"exports": "./build/create-app.js",
-	"main": "./build/create-app.js",
+	"exports": "./build/src/main.js",
 	"type": "module",
 	"engines": {
-		"node": "^16.11.0 || ^17.0.0 || ^18.0.0",
+		"node": "^16.13.0 || ^17.0.0 || ^18.0.0",
 		"npm": ">=8.5.0"
 	},
 	"repository": {
@@ -27,8 +26,17 @@
 	},
 	"homepage": "https://github.com/nuxtus/create-nuxtus#readme",
 	"scripts": {
-		"build": "tsc -p ."
-	},
+    "start": "node build/src/main.js",
+    "clean": "rimraf coverage build tmp",
+    "prebuild": "npm run lint",
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "tsc -w -p tsconfig.json",
+    "build:release": "npm run clean && tsc -p tsconfig.release.json",
+    "lint": "eslint . --ext .ts --ext .mts",
+    "test": "jest --coverage",
+    "prettier": "prettier --config .prettierrc --write .",
+    "test:watch": "jest --watch"
+  },
 	"bin": {
 		"create-nuxtus": "./build/create-app.js"
 	},
@@ -39,9 +47,10 @@
 	"dependencies": {
 		"chalk": "^5.0.1",
 		"child_process": "^1.0.2",
-		"figlet": "^1.5.2",
+    "figlet": "^1.5.2",
+    "ora": "^6.1.2",
+    "tslib": "~2.4",
 		"nunjucks": "^3.2.3",
-		"ora": "^6.1.2",
 		"rimraf": "^3.0.2"
 	},
 	"release": {
@@ -79,10 +88,19 @@
 		"@semantic-release/git": "^10.0.1",
 		"@semantic-release/github": "^8.0.5",
 		"@semantic-release/release-notes-generator": "^10.0.3",
-		"@types/figlet": "^1.5.4",
-		"@types/node": "^18.7.2",
-		"@types/nunjucks": "^3.2.1",
 		"semantic-release": "^19.0.3",
-		"typescript": "^4.7.4"
+		"@types/jest": "~27.5",
+    "@types/node": "~16",
+    "@typescript-eslint/eslint-plugin": "~5.26",
+    "@typescript-eslint/parser": "~5.26",
+    "eslint": "~8.16",
+    "eslint-config-prettier": "~8.5",
+    "eslint-plugin-jest": "~26.2",
+    "jest": "~28.1",
+    "prettier": "~2.6",
+    "rimraf": "~3.0",
+    "ts-jest": "~28.0",
+    "tsutils": "~3.21",
+    "typescript": "~4.7"
 	}
 }
