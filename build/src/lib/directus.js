@@ -41,6 +41,9 @@ export async function installDirectus(projectName) {
         process.on('message', (message) => {
             console.log("message: ", message);
         });
+        process.stdin.on('data', (data) => {
+            console.log("data: ", data);
+        });
         process.on('exit', function () {
             // *** Process completed
             resolve();
