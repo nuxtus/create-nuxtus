@@ -2,19 +2,11 @@
 import * as fs from "fs";
 import * as path from "path";
 import { execSync, spawn } from "child_process";
+import { hookStdout } from 'hook-std';
 import ora from "ora";
 export function startDirectus() {
-    const process = spawn("npx", ["directus", "start"], {
+    spawn("npx", ["directus", "start"], {
         cwd: "./server",
-    });
-    process.stdout.on("data", (data) => {
-        console.log(data.toString());
-    });
-    process.stderr.on("data", (data) => {
-        console.error(data.toString());
-    });
-    process.on("exit", (code) => {
-        console.log(`Directus exited with code ${code}`);
     });
 }
 export function installDirectusHook(projectName) {
@@ -37,18 +29,31 @@ export function installDirectusHook(projectName) {
 }
 export async function installDirectus(projectName) {
     return new Promise((resolve, reject) => {
-        const process = spawn('npm', ["init", "directus-project", "server"], { stdio: 'inherit', cwd: `./${projectName}` });
-        process.on('message', (message) => {
-            console.log("message: ", message);
+        const child = spawn('npm', ["init", "directus-project", "server"], { stdio: 'inherit', cwd: `./${projectName}` });
+        // const child = spawn('npm', ["init", "directus-project", "server"], {cwd: `./${projectName}`})
+        const promise = hookStdout((output, _unhook) => {
+            // unhook();
+            console.log("FROM HOOK", output.trim());
         });
-        process.stdin.on('data', (data) => {
-            console.log("data: ", data);
+        promise;
+        // child.on('message', (message) => {
+        //   console.log("message: ", message)
+        // })
+        // child.stdin.write('Hello there!');
+        // Listen for any response from the child:
+        child.stdout.on('data', function (data) {
+            console.log('We received a reply: ' + data);
         });
-        process.on('exit', function () {
+        // Listen for any errors:
+        child.stderr.on('data', function (data) {
+            console.log('There was an error: ' + data);
+        });
+        child.on('exit', function (data) {
             // *** Process completed
+            console.log('exit', data);
             resolve();
         });
-        process.on('error', function (err) {
+        child.on('error', function (err) {
             // *** Process creation failed
             reject(err);
         });

@@ -63,24 +63,25 @@ try {
 }
 
 async function main() {
-	try {
+
 		// const directusSpinner = ora(
 		// 	"Installing Directus..."
 		// ).start()
 		// const rmSpinner = ora("Removing unused files...").start()
-
-		// TODO: Change all spinner success/fail to ora as below
-		installDirectus(projectName).then(() => {
-      // Replace "name": "server" in package.json with "name": ${packageName}
-      updatePackageJson(projectName, ProjectType.Directus)
-      // directusSpinner.succeed("Directus installed.")
-      installDirectusHook(projectName)
-    }).catch((error) => {
-      // console.error(error)
-      console.error(chalk.red(`Failed installing Nuxtus hook: ${error}`))
-			// directusSpinner.fail(`Failed installing Directus: ${error}`)
-			return
-    })
+    try {
+      // TODO: Change all spinner success/fail to ora as below
+      installDirectus(projectName).then(() => {
+        // Replace "name": "server" in package.json with "name": ${packageName}
+        updatePackageJson(projectName, ProjectType.Directus)
+        // directusSpinner.succeed("Directus installed.")
+        installDirectusHook(projectName)
+      }).catch((error) => {
+        // console.error(error)
+        console.error(chalk.red(`Failed installing Directus: ${error}`))
+        // TODO: Kill child process on error
+        // directusSpinner.fail(`Failed installing Directus: ${error}`)
+        return
+      })
 
     // console.log(directus)
 
@@ -168,7 +169,8 @@ async function main() {
 				// 	)
 				// })
 	} catch (error) {
-		console.log(chalk.red(error))
+      console.log(chalk.red(error))
+      process.exit(1)
 	}
 }
 
