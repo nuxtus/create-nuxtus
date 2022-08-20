@@ -4,10 +4,10 @@ import * as path from "path";
 import { ProjectType, updatePackageJson } from "./lib/util.js";
 // import { exec, execSync } from "child_process"
 import { installDirectus, installDirectusHook } from "./lib/directus.js";
+import { installNuxt, installTailwind } from "./lib/nuxt.js";
 import chalk from "chalk";
 import figlet from "figlet";
-// import { installNuxt } from "./lib/nuxt.js"
-// import ora from "ora"
+import ora from "ora";
 console.log(chalk.green(figlet.textSync("nuxtus", { horizontalLayout: "full" })));
 const currentNodeVersion = process.versions.node;
 const semver = currentNodeVersion.split(".");
@@ -44,36 +44,32 @@ catch (err) {
     process.exit(1);
 }
 async function main() {
-    // const directusSpinner = ora(
-    // 	"Installing Directus..."
-    // ).start()
     // const rmSpinner = ora("Removing unused files...").start()
+    const directusSpinner = ora("Installing Nuxtus hook...");
     try {
-        // TODO: Change all spinner success/fail to ora as below
         installDirectus(projectName).then(() => {
+            directusSpinner.start();
             // Replace "name": "server" in package.json with "name": ${packageName}
             updatePackageJson(projectName, ProjectType.Directus);
-            // directusSpinner.succeed("Directus installed.")
             installDirectusHook(projectName);
+            directusSpinner.succeed("Nuxtus hook installed.");
         }).catch((error) => {
             // console.error(error)
-            console.error(chalk.red(`Failed installing Directus: ${error}`));
-            // TODO: Kill child process on error
-            // directusSpinner.fail(`Failed installing Directus: ${error}`)
-            return;
+            directusSpinner.fail(chalk.red(`Failed installing Directus: ${error}`));
+            process.exit(1);
         });
         // console.log(directus)
-        // const nuxtSpinner = ora(
-        // 	"Installing Nuxt"
-        // ).start()
-        // installNuxt(projectName).then(() => {
-        //   updatePackageJson(projectName, ProjectType.Nuxt)
-        //   // TODO: Install Tailwind CSS here
-        //   nuxtSpinner.succeed("Nuxt installed.")
-        // }).catch((error) => {
-        //   console.error(chalk.red(`Failed installing Nuxt: ${error}`))
-        //   return
-        // })
+        const nuxtSpinner = ora("Installing Nuxt").start();
+        installNuxt(projectName).then(async () => {
+            updatePackageJson(projectName, ProjectType.Nuxt);
+            await installTailwind(projectName);
+            // TODO: install nuxt-directus here
+            // TODO: Update nuxt.config.js
+            nuxtSpinner.succeed("Nuxt installed.");
+        }).catch((error) => {
+            console.error(chalk.red(`Failed installing Nuxt: ${error}`));
+            return;
+        });
         // TODO: Can run npm install for nuxt and root nuxtus in parallel
         // let cleanup = new Promise((resolve, reject) => {
         // 	execSync("npx rimraf ./.git ./TODO ./node_modules ./.github CHANGELOG.md")

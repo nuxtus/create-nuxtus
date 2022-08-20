@@ -2,14 +2,12 @@
 import * as fs from "fs";
 import * as path from "path";
 import { execSync, spawn } from "child_process";
-import ora from "ora";
 export function startDirectus() {
     spawn("npx", ["directus", "start"], {
         cwd: "./server",
     });
 }
 export function installDirectusHook(projectName) {
-    const hookSpinner = ora("Installing Nuxtus hook...").start();
     try {
         execSync(`cd ${projectName}/server && npm install @nuxtus/directus-extension-nuxtus-hook --save-dev`, {
             stdio: "ignore",
@@ -19,7 +17,6 @@ export function installDirectusHook(projectName) {
         fs.mkdirSync(subDest);
         const dest = path.join(subDest, "index.js");
         fs.copyFileSync(source, dest);
-        hookSpinner.succeed("Nuxtus hook installed.");
     }
     catch (err) {
         // console.error(chalk.red(`Failed installing Nuxtus hook: ${err}`))
@@ -29,7 +26,6 @@ export function installDirectusHook(projectName) {
 export async function installDirectus(projectName) {
     return new Promise((resolve, reject) => {
         const child = spawn('npm', ["init", "directus-project", "server"], { stdio: 'inherit', cwd: `./${projectName}` });
-        // const child = spawn('npm', ["init", "directus-project", "server"], {cwd: `./${projectName}`})
         child.on('exit', function () {
             // *** Process completed
             // Append NUXT_SERVER to .env

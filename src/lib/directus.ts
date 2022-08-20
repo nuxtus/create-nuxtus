@@ -4,8 +4,6 @@ import * as path from "path"
 
 import { execSync, spawn } from "child_process"
 
-import ora from "ora"
-
 export function startDirectus(): void {
 	spawn("npx", ["directus", "start"], {
 		cwd: "./server",
@@ -13,8 +11,6 @@ export function startDirectus(): void {
 }
 
 export function installDirectusHook(projectName: string): void{
-	const hookSpinner = ora("Installing Nuxtus hook...").start()
-
 	try {
 		execSync(
 			`cd ${projectName}/server && npm install @nuxtus/directus-extension-nuxtus-hook --save-dev`,
@@ -42,7 +38,6 @@ export function installDirectusHook(projectName: string): void{
 		fs.mkdirSync(subDest)
 		const dest = path.join(subDest, "index.js")
 		fs.copyFileSync(source, dest)
-		hookSpinner.succeed("Nuxtus hook installed.")
 	} catch (err) {
 		// console.error(chalk.red(`Failed installing Nuxtus hook: ${err}`))
 		throw `Failed installing Nuxtus hook: ${err}`
