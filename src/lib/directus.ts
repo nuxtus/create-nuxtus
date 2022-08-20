@@ -6,13 +6,13 @@ import { execSync, spawn } from "child_process"
 
 import ora from "ora"
 
-export function startDirectus() {
+export function startDirectus(): void {
 	spawn("npx", ["directus", "start"], {
 		cwd: "./server",
 	})
 }
 
-export function installDirectusHook(projectName: string){
+export function installDirectusHook(projectName: string): void{
 	const hookSpinner = ora("Installing Nuxtus hook...").start()
 
 	try {
@@ -51,26 +51,15 @@ export function installDirectusHook(projectName: string){
 
 export async function installDirectus(projectName: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    // const child = spawn('npm', ["init", "directus-project", "server"], { stdio: 'inherit', cwd: `./${projectName}` })
-    const child = spawn('npm', ["init", "directus-project", "server"], {cwd: `./${projectName}`})
+    const child = spawn('npm', ["init", "directus-project", "server"], { stdio: 'inherit', cwd: `./${projectName}` })
 
-    // process.on('message', (message) => {
-    //   console.log("message: ", message)
-    // })
-
-    // child.stdin.write('Hello there!');
-    // Listen for any response from the child:
-    // child.stdout.on('data', function (data) {
-    //     console.log('We received a reply: ' + data);
-    // });
-    // Listen for any errors:
-    // child.stderr.on('data', function (data) {
-    //     console.log('There was an error: ' + data);
-    // });
-
-    child.on('exit', function (data) { // Should probably be 'exit', not 'close'
+    child.on('exit', function () { // Should probably be 'exit', not 'close'
       // *** Process completed
-      console.log('exit', data)
+      // Append NUXT_SERVER to .env
+      const nuxtServer = `####################################################################################################
+## NUXT SERVER
+NUXT_SERVER="http://localhost:3000"`
+      fs.appendFileSync(`./${projectName}/server/.env`, nuxtServer)
       resolve()
     })
     child.on('error', function (err) {

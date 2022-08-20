@@ -9,9 +9,8 @@ import { installDirectus, installDirectusHook } from "./lib/directus.js"
 
 import chalk from "chalk"
 import figlet from "figlet"
-
 // import { installNuxt } from "./lib/nuxt.js"
-// import ora from "ora"
+import ora from "ora"
 
 console.log(
 	chalk.green(figlet.textSync("nuxtus", { horizontalLayout: "full" }))
@@ -62,19 +61,19 @@ try {
 	process.exit(1)
 }
 
-async function main() {
+async function main(): Promise<void> {
 
-		// const directusSpinner = ora(
-		// 	"Installing Directus..."
-		// ).start()
 		// const rmSpinner = ora("Removing unused files...").start()
     try {
       // TODO: Change all spinner success/fail to ora as below
       installDirectus(projectName).then(() => {
+        const directusSpinner = ora(
+          "Installing Nuxtus hook..."
+        ).start()
         // Replace "name": "server" in package.json with "name": ${packageName}
         updatePackageJson(projectName, ProjectType.Directus)
-        // directusSpinner.succeed("Directus installed.")
         installDirectusHook(projectName)
+        directusSpinner.succeed("Nuxtus hook installed.")
       }).catch((error) => {
         // console.error(error)
         console.error(chalk.red(`Failed installing Directus: ${error}`))
