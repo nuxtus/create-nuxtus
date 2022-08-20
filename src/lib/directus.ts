@@ -6,13 +6,13 @@ import { exec, execSync, spawn } from "child_process"
 
 import ora from "ora"
 
-export function startDirectus() {
+export function startDirectus(): void {
 	spawn("npx", ["directus", "start"], {
 		cwd: "./server",
 	})
 }
 
-export function installDirectusHook(){
+export function installDirectusHook(): void{
 	const hookSpinner = ora("Installing Nuxtus hook...").start()
 
 	try {

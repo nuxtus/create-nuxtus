@@ -29,7 +29,7 @@ export enum ProjectType {
 				type: "list",
 				name: "dbType",
 				message: "Select database type",
-				choices: ["SQLite", "Other"],
+				choices: ["PostgreSQL / Redshift", "MySQL/MariaDB/Aurora", "Microsoft SQL Server", "Oracle Database", "CockroachDB", "SQLite"],
 			}
 		])
  }

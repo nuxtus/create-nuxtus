@@ -155,7 +155,7 @@ async function main(): Promise<void> {
     console.log(
       chalk.green("🚀 Nuxtus site is ready for use!\n\n") +
       chalk.blueBright("Directus admin login\n") +
-      chalk.bgCyan.white.underline("http://localhost:8055\n") +
+      chalk.bgMagenta.white.underline("http://localhost:8055\n") +
       chalk.bold(`User: `) +
       chalk.white("admin@example.com") +
       chalk.bold(` Password: `) +
