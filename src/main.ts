@@ -4,7 +4,7 @@ import * as fs from "fs"
 import * as path from "path"
 
 import { ProjectType, askOptions, cleanUp, updatePackageJson } from "./lib/util.js"
-import { installDirectus, installDirectusHook } from "./lib/directus.js"
+import { installDBDriver, installDirectus, installDirectusHook } from "./lib/directus.js"
 
 import chalk from "chalk"
 import { execSync } from "child_process"
@@ -110,6 +110,7 @@ async function main(): Promise<void> {
   })
 
   const nuxt = installNuxt().then(() => {
+    installDBDriver(options.dbType)
     updatePackageJson(projectName, ProjectType.Nuxt)
     nuxtSpinner.succeed("Nuxt installed.")
   }).catch((error) => {
@@ -118,7 +119,7 @@ async function main(): Promise<void> {
   })
 
 
-  const cleanup = cleanUp().then(() => {
+  const cleanup = cleanUp(projectName).then(() => {
     rmSpinner.succeed("Unused files removed.")
   }).catch(error => {
     rmSpinner.fail(chalk.red(`Failed removing unused files: ${error}`))

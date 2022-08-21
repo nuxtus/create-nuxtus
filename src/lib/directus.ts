@@ -4,6 +4,7 @@ import * as path from "path"
 
 import { exec, execSync, spawn } from "child_process"
 
+import { getDriverForClient } from "./util.js"
 import ora from "ora"
 
 export function startDirectus(): void {
@@ -59,4 +60,12 @@ export async function installDirectus(): Promise<void> {
       }
     )
   })
+}
+
+export async function installDBDriver(client) {
+  const dbClient = getDriverForClient(client)!;
+
+	const spinnerDriver = ora('Installing Database Driver...').start();
+	await exec(`npm install ${dbClient} --production`);
+	spinnerDriver.stop();
 }

@@ -87,7 +87,7 @@ async function main() {
         nuxtSpinner.fail(chalk.red(`Failed installing Nuxt: ${error}`));
         process.exit(1);
     });
-    const cleanup = cleanUp().then(() => {
+    const cleanup = cleanUp(projectName).then(() => {
         rmSpinner.succeed("Unused files removed.");
     }).catch(error => {
         rmSpinner.fail(chalk.red(`Failed removing unused files: ${error}`));
@@ -120,7 +120,7 @@ async function main() {
         console.log("\n");
         console.log(chalk.green("🚀 Nuxtus site is ready for use!\n\n") +
             chalk.blueBright("Directus admin login\n") +
-            chalk.bgMagenta.underline("http://localhost:8055\n") +
+            chalk.bgMagenta.white.underline("http://localhost:8055\n") +
             chalk.bold(`User: `) +
             chalk.white("admin@example.com") +
             chalk.bold(` Password: `) +
