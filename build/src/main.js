@@ -4,8 +4,12 @@ import * as path from "path";
 import { ProjectType, askOptions, cleanUp, updatePackageJson } from "./lib/util.js";
 import { installDBDriver, installDirectus, installDirectusHook } from "./lib/directus.js";
 import chalk from "chalk";
+import createEnv from "./lib/directus-init/create-env.js";
+import { databaseQuestions } from './lib/directus-init/questions.js';
 import { execSync } from "child_process";
 import figlet from "figlet";
+import { getDriverForClient } from "./lib/directus-init/drivers.js";
+import inquirer from "inquirer";
 import { installNuxt } from "./lib/nuxt.js";
 import ora from "ora";
 let options = {
@@ -46,9 +50,15 @@ catch (err) {
     }
     process.exit(1);
 }
+let dbClient;
+let credentials;
+const rootPath = path.join(process.cwd(), projectName, "server");
 async function main() {
     try {
         options = await askOptions();
+        dbClient = await getDriverForClient(options.dbType);
+        await installDBDriver(dbClient);
+        credentials = await inquirer.prompt(databaseQuestions[dbClient].map((question) => question({ client: dbClient, filepath: rootPath })));
     }
     catch (error) {
         if (error.isTtyError) {
@@ -71,17 +81,17 @@ async function main() {
     }
     const directusSpinner = ora("Installing Directus...").start();
     const nuxtSpinner = ora("Installing Nuxt...").start();
-    const rmSpinner = ora("Removing unused files...").start();
-    const directus = installDirectus().then(() => {
+    const rmSpinner = ora("Optimising boilerplate...").start();
+    const directus = installDirectus().then(async () => {
         // Replace "name": "server" in package.json with "name": ${packageName}
-        updatePackageJson(projectName, ProjectType.Directus);
-        directusSpinner.succeed("Directus installed.");
-        installDBDriver(options.dbType);
+        await updatePackageJson(projectName, ProjectType.Directus);
+        await createEnv(dbClient, credentials, rootPath);
         // Run the boilerplate install script here
         execSync("cd server && npm run cli bootstrap", {
             stdio: "ignore",
         });
-        installDirectusHook();
+        await installDirectusHook();
+        directusSpinner.succeed("Directus installed.");
     }).catch((error) => {
         directusSpinner.fail(`Failed installing Directus: ${error}`);
         process.exit(1);
@@ -94,7 +104,7 @@ async function main() {
         process.exit(1);
     });
     const cleanup = cleanUp(projectName).then(() => {
-        rmSpinner.succeed("Unused files removed.");
+        rmSpinner.succeed("Boilerplate customised.");
     }).catch(error => {
         rmSpinner.fail(chalk.red(`Failed removing unused files: ${error}`));
         process.exit(1);

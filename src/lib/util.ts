@@ -2,6 +2,7 @@ import * as fs from "fs"
 import * as path from "path"
 
 import { Options } from "../main.js"
+import { drivers } from "./directus-init/drivers.js"
 import { execSync } from "child_process"
 import inquirer from "inquirer"
 
@@ -21,23 +22,6 @@ export enum ProjectType {
   packageJsonObject.name = projectName
   fs.writeFileSync(packageJson, JSON.stringify(packageJsonObject, null, 2))
  }
-
- export const drivers = {
-	pg: 'PostgreSQL / Redshift',
-	cockroachdb: 'CockroachDB (Beta)',
-	mysql: 'MySQL / MariaDB / Aurora',
-	sqlite3: 'SQLite',
-	mssql: 'Microsoft SQL Server',
-	oracledb: 'Oracle Database',
- };
-
- export function getDriverForClient(client: string): keyof typeof drivers | null {
-	for (const [key, value] of Object.entries(drivers)) {
-		if (value === client) return key as keyof typeof drivers;
-	}
-
-	return null;
-}
 
  export async function askOptions(): Promise<Options> {
 	return inquirer

@@ -49,10 +49,14 @@
 		"child_process": "^1.0.2",
 		"figlet": "^1.5.2",
 		"inquirer": "^9.1.0",
+		"liquidjs": "^9.40.0",
+		"nanoid": "^4.0.0",
 		"nunjucks": "^3.2.3",
 		"ora": "^6.1.2",
 		"rimraf": "^3.0.2",
-		"tslib": "~2.4"
+		"sqlite3": "^5.0.11",
+		"tslib": "~2.4",
+		"uuid": "^8.3.2"
 	},
 	"release": {
 		"branches": "main",
@@ -90,7 +94,7 @@
 		"@semantic-release/github": "^8.0.5",
 		"@semantic-release/release-notes-generator": "^10.0.3",
 		"@types/jest": "~27.5",
-		"@types/node": "^16.11.49",
+		"@types/node": "^16.11.52",
 		"@typescript-eslint/eslint-plugin": "~5.26",
 		"@typescript-eslint/parser": "~5.26",
 		"eslint": "~8.16",

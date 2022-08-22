@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import { drivers } from "./directus-init/drivers.js";
 import { execSync } from "child_process";
 import inquirer from "inquirer";
 export var ProjectType;
@@ -17,21 +18,6 @@ export function updatePackageJson(projectName, projectTye) {
     const packageJsonObject = JSON.parse(packageJsonContent);
     packageJsonObject.name = projectName;
     fs.writeFileSync(packageJson, JSON.stringify(packageJsonObject, null, 2));
-}
-export const drivers = {
-    pg: 'PostgreSQL / Redshift',
-    cockroachdb: 'CockroachDB (Beta)',
-    mysql: 'MySQL / MariaDB / Aurora',
-    sqlite3: 'SQLite',
-    mssql: 'Microsoft SQL Server',
-    oracledb: 'Oracle Database',
-};
-export function getDriverForClient(client) {
-    for (const [key, value] of Object.entries(drivers)) {
-        if (value === client)
-            return key;
-    }
-    return null;
 }
 export async function askOptions() {
     return inquirer

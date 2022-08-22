@@ -6,9 +6,14 @@ import * as path from "path"
 import { ProjectType, askOptions, cleanUp, updatePackageJson } from "./lib/util.js"
 import { installDBDriver, installDirectus, installDirectusHook } from "./lib/directus.js"
 
+import {Credentials} from "./lib/directus-init/create-db-credentials.js"
 import chalk from "chalk"
+import createEnv from "./lib/directus-init/create-env.js"
+import { databaseQuestions } from './lib/directus-init/questions.js';
 import { execSync } from "child_process"
 import figlet from "figlet"
+import { getDriverForClient } from "./lib/directus-init/drivers.js"
+import inquirer from "inquirer"
 import { installNuxt } from "./lib/nuxt.js"
 import ora from "ora"
 
@@ -69,10 +74,22 @@ try {
 	process.exit(1)
 }
 
+let dbClient
+let credentials: Credentials
+const rootPath = path.join(process.cwd(), projectName, "server")
+
 async function main(): Promise<void> {
 
   try {
     options = await askOptions()
+    dbClient = await getDriverForClient(options.dbType);
+    await installDBDriver(dbClient)
+
+    credentials = await inquirer.prompt(
+			(databaseQuestions[dbClient] as any[]).map((question: ({ client, filepath }: any) => any) =>
+				question({ client: dbClient, filepath: rootPath })
+			)
+    );
   } catch (error) {
     if (error.isTtyError) {
       console.log(
@@ -98,21 +115,20 @@ async function main(): Promise<void> {
 
   const directusSpinner = ora("Installing Directus...").start()
   const nuxtSpinner = ora("Installing Nuxt...").start()
-	const rmSpinner = ora("Removing unused files...").start()
+	const rmSpinner = ora("Optimising boilerplate...").start()
 
-  const directus = installDirectus().then(() => {
+  const directus = installDirectus().then(async () => {
+
     // Replace "name": "server" in package.json with "name": ${packageName}
-    updatePackageJson(projectName, ProjectType.Directus)
-    installDBDriver(options.dbType)
+    await updatePackageJson(projectName, ProjectType.Directus)
 
-    // TODO: Uncomment the correct database details in .env file
-    // See trySeed() and createEnv() functions: https://github.com/directus/directus/blob/31a217595c3b9134bc334f300992027d3bfdf09e/api/src/cli/commands/init/index.ts
+    await createEnv(dbClient, credentials, rootPath);
 
     // Run the boilerplate install script here
     execSync("cd server && npm run cli bootstrap", {
       stdio: "ignore",
     })
-    installDirectusHook()
+    await installDirectusHook()
     directusSpinner.succeed("Directus installed.")
   }).catch((error) => {
     directusSpinner.fail(`Failed installing Directus: ${error}`)
@@ -129,7 +145,7 @@ async function main(): Promise<void> {
 
 
   const cleanup = cleanUp(projectName).then(() => {
-    rmSpinner.succeed("Unused files removed.")
+    rmSpinner.succeed("Boilerplate customised.")
   }).catch(error => {
     rmSpinner.fail(chalk.red(`Failed removing unused files: ${error}`))
     process.exit(1)
