@@ -103,6 +103,16 @@ async function main(): Promise<void> {
   const directus = installDirectus().then(() => {
     // Replace "name": "server" in package.json with "name": ${packageName}
     updatePackageJson(projectName, ProjectType.Directus)
+    installDBDriver(options.dbType)
+
+    // TODO: Uncomment the correct database details in .env file
+    // See trySeed() and createEnv() functions: https://github.com/directus/directus/blob/31a217595c3b9134bc334f300992027d3bfdf09e/api/src/cli/commands/init/index.ts
+
+    // Run the boilerplate install script here
+    execSync("cd server && npm run cli bootstrap", {
+      stdio: "ignore",
+    })
+    installDirectusHook()
     directusSpinner.succeed("Directus installed.")
   }).catch((error) => {
     directusSpinner.fail(`Failed installing Directus: ${error}`)
@@ -110,7 +120,6 @@ async function main(): Promise<void> {
   })
 
   const nuxt = installNuxt().then(() => {
-    installDBDriver(options.dbType)
     updatePackageJson(projectName, ProjectType.Nuxt)
     nuxtSpinner.succeed("Nuxt installed.")
   }).catch((error) => {
@@ -127,31 +136,6 @@ async function main(): Promise<void> {
   })
 
   Promise.all([directus, nuxt, cleanup]).then(() => {
-    if (options.dbType === "SQLite") {
-      // Run migrations and start Directus/Nuxt
-      const dbSpinner = ora("Running migrations...").start()
-      try {
-        execSync("npm install", { stdio: "ignore" })
-        // TODO: This also creates Directus folders etc. so "Other" db won't work
-        execSync("cd server && npm run cli bootstrap", {
-          stdio: "ignore",
-        })
-        dbSpinner.succeed("Database migrated.")
-      } catch (err) {
-        dbSpinner.fail(chalk.red("An error occurred running migrations " + err))
-      }
-      installDirectusHook() // TODO: This needs installing regardless of DB!
-    } else {
-      console.log("\n")
-      console.log(
-        chalk.bold(
-          "You will need to edit server/.env with your database details and then run " +
-            chalk.blueBright("npm run cli bootstrap") +
-            "."
-        )
-      )
-      // TODO: Allow auto configuration of database based on selection instead of manual prompt
-    }
     console.log("\n")
     console.log(
       chalk.green("🚀 Nuxtus site is ready for use!\n\n") +

@@ -26,6 +26,13 @@ export const drivers = {
     mssql: 'Microsoft SQL Server',
     oracledb: 'Oracle Database',
 };
+export function getDriverForClient(client) {
+    for (const [key, value] of Object.entries(drivers)) {
+        if (value === client)
+            return key;
+    }
+    return null;
+}
 export async function askOptions() {
     return inquirer
         .prompt([
@@ -53,7 +60,7 @@ export async function cleanUp(projectName) {
             // Create initial package.json
             const packageJson = {
                 name: projectName,
-                description: "Directus/Nuxt boilerplate with Tailwind CSS.",
+                description: "Created with Nuxtus - Directus/Nuxt boilerplate with Tailwind CSS.",
                 version: "0.0.1",
                 scripts: {
                     client: "cd client && npm run dev -- -o",

@@ -2,7 +2,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { ProjectType, askOptions, cleanUp, updatePackageJson } from "./lib/util.js";
-import { installDirectus, installDirectusHook } from "./lib/directus.js";
+import { installDBDriver, installDirectus, installDirectusHook } from "./lib/directus.js";
 import chalk from "chalk";
 import { execSync } from "child_process";
 import figlet from "figlet";
@@ -76,6 +76,12 @@ async function main() {
         // Replace "name": "server" in package.json with "name": ${packageName}
         updatePackageJson(projectName, ProjectType.Directus);
         directusSpinner.succeed("Directus installed.");
+        installDBDriver(options.dbType);
+        // Run the boilerplate install script here
+        execSync("cd server && npm run cli bootstrap", {
+            stdio: "ignore",
+        });
+        installDirectusHook();
     }).catch((error) => {
         directusSpinner.fail(`Failed installing Directus: ${error}`);
         process.exit(1);
@@ -94,29 +100,6 @@ async function main() {
         process.exit(1);
     });
     Promise.all([directus, nuxt, cleanup]).then(() => {
-        if (options.dbType === "SQLite") {
-            // Run migrations and start Directus/Nuxt
-            const dbSpinner = ora("Running migrations...").start();
-            try {
-                execSync("npm install", { stdio: "ignore" });
-                // TODO: This also creates Directus folders etc. so "Other" db won't work
-                execSync("cd server && npm run cli bootstrap", {
-                    stdio: "ignore",
-                });
-                dbSpinner.succeed("Database migrated.");
-            }
-            catch (err) {
-                dbSpinner.fail(chalk.red("An error occurred running migrations " + err));
-            }
-            installDirectusHook(); // TODO: This needs installing regardless of DB!
-        }
-        else {
-            console.log("\n");
-            console.log(chalk.bold("You will need to edit server/.env with your database details and then run " +
-                chalk.blueBright("npm run cli bootstrap") +
-                "."));
-            // TODO: Allow auto configuration of database based on selection instead of manual prompt
-        }
         console.log("\n");
         console.log(chalk.green("🚀 Nuxtus site is ready for use!\n\n") +
             chalk.blueBright("Directus admin login\n") +
