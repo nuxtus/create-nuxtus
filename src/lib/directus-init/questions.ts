@@ -20,7 +20,7 @@ const port = ({ client }: { client: string }): Record<string, any> => ({
 	type: 'input',
 	name: 'port',
 	message: 'Port:',
-	default() {
+	default(): number {
 		const ports: Record<string, number> = {
 			pg: 5432,
 			cockroachdb: 26257,
