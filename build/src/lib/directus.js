@@ -1,4 +1,3 @@
-// import * as childProcess from "child_process"
 import * as fs from "fs";
 import * as path from "path";
 import { exec, execSync, spawn } from "child_process";
@@ -38,7 +37,7 @@ export async function installDirectus() {
 }
 export async function installDBDriver(dbClient) {
     const spinnerDriver = ora('Installing Database Driver...').start();
-    await exec(`npm install ${dbClient} --production`);
+    await exec(`cd server && npm install ${dbClient} --production`);
     spinnerDriver.stop();
 }
 //# sourceMappingURL=directus.js.map

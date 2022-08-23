@@ -110,6 +110,7 @@ async function main() {
         process.exit(1);
     });
     Promise.all([directus, nuxt, cleanup]).then(() => {
+        execSync(`npx rimraf ./templates`);
         console.log("\n");
         console.log(chalk.green("🚀 Nuxtus site is ready for use!\n\n") +
             chalk.blueBright("Directus admin login\n") +

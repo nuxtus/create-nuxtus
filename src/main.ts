@@ -152,6 +152,7 @@ async function main(): Promise<void> {
   })
 
   Promise.all([directus, nuxt, cleanup]).then(() => {
+    execSync(`npx rimraf ./templates`)
     console.log("\n")
     console.log(
       chalk.green("🚀 Nuxtus site is ready for use!\n\n") +

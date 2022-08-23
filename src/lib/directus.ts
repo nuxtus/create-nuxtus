@@ -1,4 +1,3 @@
-// import * as childProcess from "child_process"
 import * as fs from "fs"
 import * as path from "path"
 
@@ -63,6 +62,6 @@ export async function installDirectus(): Promise<void> {
 
 export async function installDBDriver(dbClient: string): Promise<void> {
 	const spinnerDriver = ora('Installing Database Driver...').start();
-	await exec(`npm install ${dbClient} --production`);
+	await exec(`cd server && npm install ${dbClient} --production`);
 	spinnerDriver.stop();
 }

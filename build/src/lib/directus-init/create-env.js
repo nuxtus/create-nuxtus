@@ -35,7 +35,7 @@ export default async function createEnv(client, credentials, directory) {
             configAsStrings[key] += `${envKey}="${envValue}"\n`;
         }
     }
-    const templateString = await readFile(path.join('.', 'env-stub.liquid'), 'utf8');
+    const templateString = await readFile(path.join(process.cwd(), "templates", 'env-stub.liquid'), 'utf8');
     const text = await liquidEngine.parseAndRender(templateString, configAsStrings);
     await writeFile(path.join(directory, '.env'), text);
     await fchmod(await open(path.join(directory, '.env'), 'r+'), 0o640);

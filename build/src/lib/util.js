@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import { Liquid } from 'liquidjs';
 import { drivers } from "./directus-init/drivers.js";
 import { execSync } from "child_process";
 import inquirer from "inquirer";
@@ -33,31 +34,21 @@ export async function askOptions() {
 export async function cleanUp(projectName) {
     return new Promise((resolve, reject) => {
         try {
-            execSync(`npx rimraf ./.git ./TODO ./node_modules ./.github ./CHANGELOG.md ./package.json ./package-lock.json ./LICENSE`);
+            execSync(`npx rimraf ./.git ./TODO ./node_modules ./.github ./CHANGELOG.md ./package.json ./package-lock.json ./LICENSE .gitignore`);
             fs.appendFileSync("./client/.gitignore", ".env");
-            fs.writeFileSync("./server/.gitignore", ".env");
-            // Remove interface/nuxtus.ts from gitignore
-            const interfaceFile = "./.gitignore";
-            const gitIgnore = fs.readFileSync(interfaceFile, "utf-8");
-            // replace git ignore rules that are just for nuxtus development
-            const gitRegEx = new RegExp(/client\/interfaces\/nuxtus.ts\n | package-lock.json\n | server\/extensions\/hooks\/*\n | client\/pages\/*\n /gm);
-            const newGitIgnore = gitIgnore.replace(gitRegEx, "");
-            fs.writeFileSync(interfaceFile, newGitIgnore, "utf-8");
+            const liquidEngine = new Liquid({
+                extname: '.liquid',
+            });
+            // Create .gitignore
+            const gitignoreTemplateString = fs.readFileSync(path.join(process.cwd(), "templates", 'gitignore.liquid'), "utf8");
+            const gitignoreTemplate = liquidEngine.parseAndRenderSync(gitignoreTemplateString);
+            fs.writeFileSync(path.join(process.cwd(), '.gitignore'), gitignoreTemplate);
             // Create initial package.json
-            const packageJson = {
-                name: projectName,
-                description: "Created with Nuxtus - Directus/Nuxt boilerplate with Tailwind CSS.",
-                version: "0.0.1",
-                scripts: {
-                    client: "cd client && npm run dev -- -o",
-                    server: "cd server && npx directus start",
-                    start: "concurrently \"npm run client\" \"npm run server\""
-                },
-                devDependencies: {
-                    concurrently: "^7.2.2",
-                }
-            };
-            fs.writeFileSync("package.json", JSON.stringify(packageJson), "utf-8");
+            const packageTemplateString = fs.readFileSync(path.join(process.cwd(), "templates", 'package.json.liquid'), "utf8");
+            const text = liquidEngine.parseAndRenderSync(packageTemplateString, {
+                appName: projectName
+            });
+            fs.writeFileSync(path.join(process.cwd(), 'package.json'), text);
             execSync("npm install");
         }
         catch (error) {
