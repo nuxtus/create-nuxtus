@@ -1,5 +1,12 @@
 Changelog
 
+## [1.2.1](https://github.com/nuxtus/create-nuxtus/compare/v1.2.0...v1.2.1) (2022-08-24)
+
+
+### Bug Fixes
+
+* :bug: npx script requires main ([24e59d3](https://github.com/nuxtus/create-nuxtus/commit/24e59d3b612a6216553b432a29b88acdf7a4a21d))
+
 # [1.2.0](https://github.com/nuxtus/create-nuxtus/compare/v1.1.1...v1.2.0) (2022-08-24)
 
 
