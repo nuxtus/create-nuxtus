@@ -1,5 +1,12 @@
 Changelog
 
+## [1.2.2](https://github.com/nuxtus/create-nuxtus/compare/v1.2.1...v1.2.2) (2022-08-24)
+
+
+### Bug Fixes
+
+* :bug: update bin command ([e02bba8](https://github.com/nuxtus/create-nuxtus/commit/e02bba81ba4b0594dd19c4e265cd2875f2e53d5c))
+
 ## [1.2.1](https://github.com/nuxtus/create-nuxtus/compare/v1.2.0...v1.2.1) (2022-08-24)
 
 
