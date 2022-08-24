@@ -1,5 +1,14 @@
 Changelog
 
+# [1.2.0](https://github.com/nuxtus/create-nuxtus/compare/v1.1.1...v1.2.0) (2022-08-24)
+
+
+### Features
+
+* :sparkles: can use any Directus compatible DB ([2cf83cf](https://github.com/nuxtus/create-nuxtus/commit/2cf83cff0bae259fbc5c4325804e1d120131864b))
+* :sparkles: support for all Directus database clients ([3dda34d](https://github.com/nuxtus/create-nuxtus/commit/3dda34df242a173702d562cf7c5d63d62e99fade))
+* :sparkles: using liquid templates for file population ([b13f9a4](https://github.com/nuxtus/create-nuxtus/commit/b13f9a40167c39701ce5ce6872db9e5977d1de39))
+
 ## [1.1.1](https://github.com/nuxtus/create-nuxtus/compare/v1.1.0...v1.1.1) (2022-08-11)
 
 
