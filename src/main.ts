@@ -18,11 +18,15 @@ import { installNuxt } from "./lib/nuxt.js"
 import ora from "ora"
 
 export declare type Options = {
-  dbType: string
+  dbType: string,
+  email: string,
+  password: string
 }
 
 let options: Options = {
-	dbType: "SQLite"
+  dbType: "SQLite",
+  email: "admin@example.com",
+  password: "password"
 }
 
 console.log(
@@ -101,6 +105,8 @@ async function main(): Promise<void> {
     }
   }
 
+  console.log("") // empty line between Directus questions and status messages
+
   const nuxtusSpinner = ora("Downloading Nuxtus boilerplate...").start()
 
   try {
@@ -122,7 +128,7 @@ async function main(): Promise<void> {
     // Replace "name": "server" in package.json with "name": ${packageName}
     await updatePackageJson(projectName, ProjectType.Directus)
 
-    await createEnv(dbClient, credentials, rootPath);
+    await createEnv(dbClient, credentials, rootPath, { email: options.email, password: options.password});
 
     // Run the boilerplate install script here
     execSync("cd server && npm run cli bootstrap", {
