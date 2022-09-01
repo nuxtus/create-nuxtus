@@ -18,12 +18,13 @@ const defaults = {
         SECRET: nanoid(32),
     },
 };
-export default async function createEnv(client, credentials, directory) {
+export default async function createEnv(client, credentials, directory, user) {
     const config = {
         ...defaults,
         database: {
             DB_CLIENT: client,
         },
+        user
     };
     for (const [key, value] of Object.entries(credentials)) {
         config.database[`DB_${key.toUpperCase()}`] = value;
@@ -35,6 +36,7 @@ export default async function createEnv(client, credentials, directory) {
             configAsStrings[key] += `${envKey}="${envValue}"\n`;
         }
     }
+    configAsStrings["user"] = `ADMIN_EMAIL="${user.email}"\nADMIN_PASSWORD="${user.password}"`;
     const templateString = await readFile(path.join(process.cwd(), "templates", 'env-stub.liquid'), 'utf8');
     const text = await liquidEngine.parseAndRender(templateString, configAsStrings);
     await writeFile(path.join(directory, '.env'), text);

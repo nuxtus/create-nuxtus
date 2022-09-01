@@ -28,13 +28,15 @@ const defaults = {
 export default async function createEnv(
 	client: keyof typeof drivers,
 	credentials: Credentials,
-	directory: string
+  directory: string,
+  user: { email: string, password: string }
 ): Promise<void> {
 	const config: Record<string, any> = {
 		...defaults,
 		database: {
 			DB_CLIENT: client,
-		},
+    },
+    user
 	};
 
 	for (const [key, value] of Object.entries(credentials)) {
@@ -50,6 +52,8 @@ export default async function createEnv(
 			configAsStrings[key] += `${envKey}="${envValue}"\n`;
 		}
   }
+
+  configAsStrings["user"] = `ADMIN_EMAIL="${user.email}"\nADMIN_PASSWORD="${user.password}"`;
 
 	const templateString = await readFile(path.join(process.cwd(), "templates", 'env-stub.liquid'), 'utf8');
 	const text = await liquidEngine.parseAndRender(templateString, configAsStrings);
