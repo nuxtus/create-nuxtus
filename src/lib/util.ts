@@ -31,6 +31,18 @@ export enum ProjectType {
     .prompt([
       {
         type: 'input',
+        name: 'directusURL',
+        message: 'Directus URL',
+        default: 'http://localhost:8055',
+        validate: (input: string): boolean => {
+          const uriSchema = Joi.string().uri().optional();
+          const { error } = uriSchema.validate(input);
+          if (error) throw new Error('The Directus Cloud URL must be a valid URL or empty.');
+          return true;
+        },
+      },
+      {
+        type: 'input',
         name: 'email',
         message: 'Email',
         default: 'admin@example.com',

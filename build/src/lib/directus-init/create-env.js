@@ -37,7 +37,7 @@ export default async function createEnv(client, credentials, directory, user) {
         }
     }
     configAsStrings["user"] = `ADMIN_EMAIL="${user.email}"\nADMIN_PASSWORD="${user.password}"`;
-    const templateString = await readFile(path.join(process.cwd(), "templates", 'env-stub.liquid'), 'utf8');
+    const templateString = await readFile(path.join(process.cwd(), "templates", 'env-directus.liquid'), 'utf8');
     const text = await liquidEngine.parseAndRender(templateString, configAsStrings);
     await writeFile(path.join(directory, '.env'), text);
     await fchmod(await open(path.join(directory, '.env'), 'r+'), 0o640);
