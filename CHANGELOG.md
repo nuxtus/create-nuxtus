@@ -1,5 +1,14 @@
 Changelog
 
+# [1.3.0](https://github.com/nuxtus/create-nuxtus/compare/v1.2.2...v1.3.0) (2022-09-06)
+
+
+### Features
+
+* :sparkles: Directus url is customised at start ([a4dd77e](https://github.com/nuxtus/create-nuxtus/commit/a4dd77eb8b95e57b97732d0c2d21ebde4a04574c))
+* :sparkles: move .env ignore to root .gitignore ([5b783c1](https://github.com/nuxtus/create-nuxtus/commit/5b783c18c47fbf76425f23563f3acd7c94ee81f0))
+* :sparkles: prompt for Directus user credentials on creation ([65956fe](https://github.com/nuxtus/create-nuxtus/commit/65956fea74b8347804554fdf52559aeec095ea9e))
+
 ## [1.2.2](https://github.com/nuxtus/create-nuxtus/compare/v1.2.1...v1.2.2) (2022-08-24)
 
 
