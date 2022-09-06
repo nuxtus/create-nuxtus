@@ -1,6 +1,7 @@
 import * as fs from "fs"
 import * as path from "path"
 
+import Joi from 'joi';
 import { Liquid } from 'liquidjs';
 import { Options } from "../main.js"
 import { drivers } from "./directus-init/drivers.js"
@@ -25,14 +26,49 @@ export enum ProjectType {
  }
 
  export async function askOptions(): Promise<Options> {
-	return inquirer
-		.prompt([
+	console.log("Directus configuration\n")
+  return inquirer
+    .prompt([
+      {
+        type: 'input',
+        name: 'directusURL',
+        message: 'Directus URL',
+        default: 'http://localhost:8055',
+        validate: (input: string): boolean => {
+          const uriSchema = Joi.string().uri().optional();
+          const { error } = uriSchema.validate(input);
+          if (error) throw new Error('The Directus Cloud URL must be a valid URL or empty.');
+          return true;
+        },
+      },
+      {
+        type: 'input',
+        name: 'email',
+        message: 'Email',
+        default: 'admin@example.com',
+        validate: (input: string): boolean => {
+          const emailSchema = Joi.string().email().required();
+          const { error } = emailSchema.validate(input);
+          if (error) throw new Error('The email entered is not a valid email address!');
+          return true;
+        },
+      },
+      {
+        type: 'password',
+        name: 'password',
+        message: 'Password',
+        mask: '*',
+        validate: (input: string | null): boolean => {
+          if (input === null || input === '') throw new Error('The password cannot be empty!');
+          return true;
+        },
+      },
 			{
 				type: "list",
 				name: "dbType",
 				message: "Choose your database client",
 				choices: Object.values(drivers),
-			}
+      },
 		])
  }
 
@@ -40,7 +76,7 @@ export async function cleanUp(projectName: string): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
       execSync(`npx rimraf ./.git ./TODO ./node_modules ./.github ./CHANGELOG.md ./package.json ./package-lock.json ./LICENSE .gitignore`)
-      fs.appendFileSync("./client/.gitignore", ".env")
+      fs.appendFileSync("./.gitignore", ".env")
       const liquidEngine = new Liquid({
         extname: '.liquid',
       });

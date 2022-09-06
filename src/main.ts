@@ -5,6 +5,7 @@ import * as path from "path"
 
 import { ProjectType, askOptions, cleanUp, updatePackageJson } from "./lib/util.js"
 import { installDBDriver, installDirectus, installDirectusHook } from "./lib/directus.js"
+import { installLocaltunnel, installNuxt } from "./lib/nuxt.js"
 
 import {Credentials} from "./lib/directus-init/create-db-credentials.js"
 import chalk from "chalk"
@@ -14,15 +15,20 @@ import { execSync } from "child_process"
 import figlet from "figlet"
 import { getDriverForClient } from "./lib/directus-init/drivers.js"
 import inquirer from "inquirer"
-import { installNuxt } from "./lib/nuxt.js"
 import ora from "ora"
 
 export declare type Options = {
-  dbType: string
+  dbType: string,
+  directusURL: string,
+  email: string,
+  password: string
 }
 
 let options: Options = {
-	dbType: "SQLite"
+  dbType: "SQLite",
+  directusURL: "http://localhost:8055",
+  email: "admin@example.com",
+  password: "password"
 }
 
 console.log(
@@ -101,6 +107,8 @@ async function main(): Promise<void> {
     }
   }
 
+  console.log("") // empty line between Directus questions and status messages
+
   const nuxtusSpinner = ora("Downloading Nuxtus boilerplate...").start()
 
   try {
@@ -122,7 +130,7 @@ async function main(): Promise<void> {
     // Replace "name": "server" in package.json with "name": ${packageName}
     await updatePackageJson(projectName, ProjectType.Directus)
 
-    await createEnv(dbClient, credentials, rootPath);
+    await createEnv(dbClient, credentials, rootPath, { email: options.email, password: options.password});
 
     // Run the boilerplate install script here
     execSync("cd server && npm run cli bootstrap", {
@@ -135,8 +143,11 @@ async function main(): Promise<void> {
     process.exit(1)
   })
 
-  const nuxt = installNuxt().then(() => {
+  const nuxt = installNuxt(options.directusURL, options.email, options.password).then(() => {
     updatePackageJson(projectName, ProjectType.Nuxt)
+    if (options.directusURL !=="http://localhost:8055") {
+      installLocaltunnel()
+    }
     nuxtSpinner.succeed("Nuxt installed.")
   }).catch((error) => {
     nuxtSpinner.fail(chalk.red(`Failed installing Nuxt: ${error}`))
@@ -156,20 +167,16 @@ async function main(): Promise<void> {
     console.log("\n")
     console.log(
       chalk.green("🚀 Nuxtus site is ready for use!\n\n") +
-      chalk.blueBright("Directus admin login\n") +
-      chalk.bgMagenta.white.underline("http://localhost:8055\n") +
-      chalk.bold(`User: `) +
-      chalk.white("admin@example.com") +
-      chalk.bold(` Password: `) +
-      chalk.white("password\n\n") +
+      chalk.white.bold("Directus\n") +
+      chalk.magenta.underline(`${options.directusURL}\n\n`) +
 
-      chalk.blueBright("Nuxtus\n") +
-      chalk.bgGreen.white.underline("http://localhost:3000\n\n") +
+      chalk.white.bold("Nuxtus\n") +
+      chalk.green.underline("http://localhost:3000\n\n") +
 
       chalk.white(`cd ${projectName}` + "\nnpm start\n\n") +
       chalk.green(
         "For documentation see: ",
-        chalk.underline("https://nuxtus.com", "\n")
+        chalk.underline("https://docs.nuxtus.com", "\n")
       )
     )
   })
