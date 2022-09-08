@@ -5,6 +5,7 @@ import { ProjectType, askOptions, cleanUp, updatePackageJson } from "./lib/util.
 import { installDBDriver, installDirectus, installDirectusHook } from "./lib/directus.js";
 import { installLocaltunnel, installNuxt } from "./lib/nuxt.js";
 import chalk from "chalk";
+import commandExistsSync from "command-exists";
 import createEnv from "./lib/directus-init/create-env.js";
 import { databaseQuestions } from './lib/directus-init/questions.js';
 import { execSync } from "child_process";
@@ -12,13 +13,9 @@ import figlet from "figlet";
 import { getDriverForClient } from "./lib/directus-init/drivers.js";
 import inquirer from "inquirer";
 import ora from "ora";
-let options = {
-    dbType: "SQLite",
-    directusURL: "http://localhost:8055",
-    email: "admin@example.com",
-    password: "password"
-};
-console.log(chalk.green(figlet.textSync("nuxtus", { horizontalLayout: "full" })));
+/************
+ * Some initial checks if we can run Nuxtus install script
+ */
 const currentNodeVersion = process.versions.node;
 const semver = currentNodeVersion.split(".");
 const major = Number(semver[0]);
@@ -30,12 +27,23 @@ if (major < 16) {
         "Please update your version of Node."));
     process.exit(1);
 }
+if (!commandExistsSync("git")) {
+    console.log(chalk.red("Git is required to install Nuxtus. Please install Git and try again."));
+    process.exit(1);
+}
 if (process.argv.length < 3) {
     console.log(chalk.red("You have to provide a name for your app."));
     console.log("For example :");
     console.log("    npx create-nuxtus " + chalk.bold("my-app"));
     process.exit(1);
 }
+let options = {
+    dbType: "SQLite",
+    directusURL: "http://localhost:8055",
+    email: "admin@example.com",
+    password: "password"
+};
+console.log(chalk.green(figlet.textSync("nuxtus", { horizontalLayout: "full" })));
 const projectName = process.argv[2];
 const currentPath = process.cwd();
 const projectPath = path.join(currentPath, projectName);
