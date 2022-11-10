@@ -1,5 +1,12 @@
 Changelog
 
+## [1.3.1](https://github.com/nuxtus/create-nuxtus/compare/v1.3.0...v1.3.1) (2022-11-10)
+
+
+### Bug Fixes
+
+* :rocket: Change renovate branch to develop ([87d9e81](https://github.com/nuxtus/create-nuxtus/commit/87d9e81f06fc693099df205206d5a5f47deb698c))
+
 # [1.3.0](https://github.com/nuxtus/create-nuxtus/compare/v1.2.2...v1.3.0) (2022-09-06)
 
 
