@@ -17,5 +17,5 @@ For more details visit [nuxtus.com](https://nuxtus.com) or [read the documentati
 You can modify the branch the script uses by supplying an environment variable `NUXTUS_BRANCH` when executing the script:
 
 ```bash
-$ NUXTUS_BRANCH=master create-app.js app-name
+$ NUXTUS_BRANCH=develop ./build/src/main.js app-name
 ```
