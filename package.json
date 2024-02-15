@@ -1,116 +1,116 @@
 {
-	"name": "create-nuxtus",
-	"description": "npx command for generating a new Nuxtus boilerplate website.",
-	"version": "1.3.0",
-	"exports": "./build/src/main.js",
-	"type": "module",
-	"engines": {
-		"node": "^16.13.0 || ^17.0.0 || ^18.0.0",
-		"npm": ">=8.5.0"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/nuxtus/create-nuxtus.git"
-	},
-	"keywords": [
-		"Directus",
-		"Nuxt",
-		"boilerplate",
-		"Tailwind",
-		"Tailwindcss"
-	],
-	"author": "Craig Harman",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/nuxtus/create-nuxtus/issues"
-	},
-	"homepage": "https://github.com/nuxtus/create-nuxtus#readme",
-	"scripts": {
-		"start": "node build/src/main.js",
-		"clean": "rimraf coverage build tmp",
-		"prebuild": "npm run lint",
-		"build": "tsc -p tsconfig.json",
-		"build:watch": "tsc -w -p tsconfig.json",
-		"build:release": "npm run clean && tsc -p tsconfig.release.json",
-		"lint": "eslint . --ext .ts --ext .mts",
-		"test": "jest --coverage",
-		"prettier": "prettier --config .prettierrc --write .",
-		"test:watch": "jest --watch"
-	},
-	"bin": {
-		"create-nuxtus": "./build/src/main.js"
-	},
-	"publishConfig": {
-		"access": "public",
-		"registry": "https://registry.npmjs.org/"
-	},
-	"dependencies": {
-		"chalk": "^5.0.1",
-		"child_process": "^1.0.2",
-		"command-exists": "^1.2.9",
-		"figlet": "^1.5.2",
-		"inquirer": "^9.1.0",
-		"joi": "^17.6.0",
-		"liquidjs": "^9.40.0",
-		"nanoid": "^4.0.0",
-		"nunjucks": "^3.2.3",
-		"ora": "^6.1.2",
-		"rimraf": "^3.0.2",
-		"tslib": "~2.4",
-		"uuid": "^9.0.0"
-	},
-	"release": {
-		"branches": "main",
-		"plugins": [
-			[
-				"@semantic-release/commit-analyzer",
-				{
-					"releaseRules": [
-						{
-							"type": "revert",
-							"release": "patch"
-						},
-						{
-							"type": "refactor",
-							"release": "minor"
-						},
+  "name": "create-nuxtus",
+  "description": "npx command for generating a new Nuxtus boilerplate website.",
+  "version": "1.3.0",
+  "exports": "./build/src/main.js",
+  "type": "module",
+  "engines": {
+    "node": "^16.13.0 || ^17.0.0 || ^18.0.0",
+    "npm": ">=8.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nuxtus/create-nuxtus.git"
+  },
+  "keywords": [
+    "Directus",
+    "Nuxt",
+    "boilerplate",
+    "Tailwind",
+    "Tailwindcss"
+  ],
+  "author": "Craig Harman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nuxtus/create-nuxtus/issues"
+  },
+  "homepage": "https://www.nuxtus.com",
+  "scripts": {
+    "start": "node build/src/main.js",
+    "clean": "rimraf coverage build tmp",
+    "prebuild": "npm run lint",
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "tsc -w -p tsconfig.json",
+    "build:release": "npm run clean && tsc -p tsconfig.release.json",
+    "lint": "eslint . --ext .ts --ext .mts",
+    "test": "jest --coverage",
+    "prettier": "prettier --config .prettierrc --write .",
+    "test:watch": "jest --watch"
+  },
+  "bin": {
+    "create-nuxtus": "./build/src/main.js"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "chalk": "^5.0.1",
+    "child_process": "^1.0.2",
+    "command-exists": "^1.2.9",
+    "figlet": "^1.5.2",
+    "inquirer": "^9.1.0",
+    "joi": "^17.6.0",
+    "liquidjs": "^9.40.0",
+    "nanoid": "^4.0.0",
+    "nunjucks": "^3.2.3",
+    "ora": "^6.1.2",
+    "rimraf": "^3.0.2",
+    "tslib": "~2.4",
+    "uuid": "^9.0.0"
+  },
+  "release": {
+    "branches": "main",
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "releaseRules": [
+            {
+              "type": "revert",
+              "release": "patch"
+            },
+            {
+              "type": "refactor",
+              "release": "minor"
+            },
             {
               "type": "fix",
               "release": "patch"
             }
-					]
-				}
-			],
-			"@semantic-release/release-notes-generator",
-			[
-				"@semantic-release/changelog",
-				{
-					"changelogTitle": "Changelog"
-				}
-			],
-			"@semantic-release/npm",
-			"@semantic-release/git",
-			"@semantic-release/github"
-		]
-	},
-	"devDependencies": {
-		"@semantic-release/changelog": "6.0.1",
-		"@semantic-release/git": "10.0.1",
-		"@semantic-release/github": "8.0.6",
-		"@semantic-release/release-notes-generator": "10.0.3",
-		"@types/jest": "27.5.2",
-		"@types/node": "16.18.3",
-		"@typescript-eslint/eslint-plugin": "5.42.1",
-		"@typescript-eslint/parser": "5.42.1",
-		"eslint": "8.27.0",
-		"eslint-config-prettier": "8.5.0",
-		"eslint-plugin-jest": "27.1.4",
-		"jest": "28.1.3",
-		"prettier": "2.7.1",
-		"rimraf": "3.0.2",
-		"semantic-release": "19.0.5",
-		"ts-jest": "28.0.8",
-		"tsutils": "3.21.0",
-		"typescript": "4.8.4"
-	}
+          ]
+        }
+      ],
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogTitle": "Changelog"
+        }
+      ],
+      "@semantic-release/npm",
+      "@semantic-release/git",
+      "@semantic-release/github"
+    ]
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "6.0.1",
+    "@semantic-release/git": "10.0.1",
+    "@semantic-release/github": "8.0.6",
+    "@semantic-release/release-notes-generator": "10.0.3",
+    "@types/jest": "27.5.2",
+    "@types/node": "16.18.3",
+    "@typescript-eslint/eslint-plugin": "5.42.1",
+    "@typescript-eslint/parser": "5.42.1",
+    "eslint": "8.27.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-jest": "27.1.4",
+    "jest": "28.1.3",
+    "prettier": "2.7.1",
+    "rimraf": "3.0.2",
+    "semantic-release": "19.0.5",
+    "ts-jest": "28.0.8",
+    "tsutils": "3.21.0",
+    "typescript": "4.8.4"
+  }
 }
