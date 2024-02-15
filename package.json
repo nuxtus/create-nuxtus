@@ -5,7 +5,7 @@
 	"exports": "./build/src/main.js",
 	"type": "module",
 	"engines": {
-		"node": "^16.13.0 || ^17.0.0 || ^18.0.0",
+		"node": "^16.13.0 || ^17.0.0 || ^18.0.0 || ^20.0.0",
 		"npm": ">=8.5.0"
 	},
 	"repository": {
@@ -99,7 +99,7 @@
 		"@semantic-release/github": "8.1.0",
 		"@semantic-release/release-notes-generator": "10.0.3",
 		"@types/jest": "29.5.12",
-		"@types/node": "16.18.80",
+		"@types/node": "20.11.17",
 		"@typescript-eslint/eslint-plugin": "7.0.1",
 		"@typescript-eslint/parser": "7.0.1",
 		"eslint": "8.56.0",
