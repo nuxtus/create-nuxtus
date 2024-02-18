@@ -16,11 +16,11 @@ const host = (): Record<string, string> => ({
 	default: '127.0.0.1',
 });
 
-const port = ({ client }: { client: string }): Record<string, any> => ({
+const port = ({ client }: { client: string }): Record<string, unknown> => ({
 	type: 'input',
 	name: 'port',
 	message: 'Port:',
-	default(): number {
+	default() {
 		const ports: Record<string, number> = {
 			pg: 5432,
 			cockroachdb: 26257,

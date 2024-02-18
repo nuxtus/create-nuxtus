@@ -31,7 +31,7 @@ export default async function createEnv(
   directory: string,
   user: { email: string, password: string }
 ): Promise<void> {
-	const config: Record<string, any> = {
+	const config: Record<string, unknown> = {
 		...defaults,
 		database: {
 			DB_CLIENT: client,
@@ -43,7 +43,7 @@ export default async function createEnv(
 		config.database[`DB_${key.toUpperCase()}`] = value;
 	}
 
-	const configAsStrings: any = {};
+	const configAsStrings: Record<string, string> = {};
 
 	for (const [key, value] of Object.entries(config)) {
 		configAsStrings[key] = '';
