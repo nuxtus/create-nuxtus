@@ -75,7 +75,7 @@ export enum ProjectType {
 export async function cleanUp(projectName: string): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
-      execSync(`npx rimraf ./.git ./TODO ./node_modules ./.github ./CHANGELOG.md ./package.json ./package-lock.json ./LICENSE .gitignore`)
+      execSync(`npx rimraf ./.git ./TODO ./node_modules ./.github ./CHANGELOG.md ./package.json ./package-lock.json ./LICENSE .gitignore renovate.json`)
       fs.appendFileSync("./.gitignore", ".env")
       const liquidEngine = new Liquid({
         extname: '.liquid',

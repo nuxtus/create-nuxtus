@@ -1,6 +1,6 @@
 // https://github.com/directus/directus/blob/31a217595c3b9134bc334f300992027d3bfdf09e/api/src/cli/commands/init/questions.ts
 import path from 'path';
-const filename = ({ filepath }) => ({
+const filename = ({ filepath, }) => ({
     type: 'input',
     name: 'filename',
     message: 'Database File Path:',
@@ -12,7 +12,7 @@ const host = () => ({
     message: 'Database Host:',
     default: '127.0.0.1',
 });
-const port = ({ client }) => ({
+const port = ({ client, }) => ({
     type: 'input',
     name: 'port',
     message: 'Port:',

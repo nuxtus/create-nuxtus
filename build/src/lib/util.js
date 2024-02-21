@@ -9,7 +9,7 @@ export var ProjectType;
 (function (ProjectType) {
     ProjectType["Directus"] = "server";
     ProjectType["Nuxt"] = "client";
-})(ProjectType = ProjectType || (ProjectType = {}));
+})(ProjectType || (ProjectType = {}));
 /**
  * Replace the name "server" with the project name supplied by user
  * @param projectName
@@ -73,7 +73,7 @@ export async function askOptions() {
 export async function cleanUp(projectName) {
     return new Promise((resolve, reject) => {
         try {
-            execSync(`npx rimraf ./.git ./TODO ./node_modules ./.github ./CHANGELOG.md ./package.json ./package-lock.json ./LICENSE .gitignore`);
+            execSync(`npx rimraf ./.git ./TODO ./node_modules ./.github ./CHANGELOG.md ./package.json ./package-lock.json ./LICENSE .gitignore renovate.json`);
             fs.appendFileSync("./.gitignore", ".env");
             const liquidEngine = new Liquid({
                 extname: '.liquid',
