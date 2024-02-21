@@ -9,7 +9,7 @@ export var ProjectType;
 (function (ProjectType) {
     ProjectType["Directus"] = "server";
     ProjectType["Nuxt"] = "client";
-})(ProjectType = ProjectType || (ProjectType = {}));
+})(ProjectType || (ProjectType = {}));
 /**
  * Replace the name "server" with the project name supplied by user
  * @param projectName

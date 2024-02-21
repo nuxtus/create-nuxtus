@@ -15,7 +15,7 @@ export function installDirectusHook() {
         });
         const source = path.join("server", "node_modules", "@nuxtus", "directus-extension-nuxtus-hook", "dist", "index.js");
         const subDest = path.join("server", "extensions", "hooks", "directus-extension-nuxtus-hook");
-        fs.mkdirSync(subDest);
+        fs.mkdirSync(subDest, { recursive: true });
         const dest = path.join(subDest, "index.js");
         fs.copyFileSync(source, dest);
         hookSpinner.succeed("Nuxtus hook installed.");
