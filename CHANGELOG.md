@@ -1,5 +1,39 @@
 Changelog
 
+# [2.0.0](https://github.com/nuxtus/create-nuxtus/compare/v1.3.1...v2.0.0) (2024-02-21)
+
+
+### Bug Fixes
+
+* :bug: make directus extension path creation recursive ([0734238](https://github.com/nuxtus/create-nuxtus/commit/0734238ef714cf4eb841bf1283e57df81d395dad))
+* **deps:** update dependency figlet to v1.7.0 ([d746fdc](https://github.com/nuxtus/create-nuxtus/commit/d746fdce262d88891c3a79e8fe00868fa93fa68b))
+* **deps:** update dependency inquirer to v9.2.14 ([f3bffc3](https://github.com/nuxtus/create-nuxtus/commit/f3bffc3e86b6e182ed14838d587567aab894203e))
+* **deps:** update dependency inquirer to v9.2.15 ([fc10db7](https://github.com/nuxtus/create-nuxtus/commit/fc10db7f2b6b8c01f9135691328e94cfcaed692b))
+* **deps:** update dependency joi to v17.12.1 ([52db9b7](https://github.com/nuxtus/create-nuxtus/commit/52db9b791d934c1ccee6bc74afab014db21cf768))
+* **deps:** update dependency liquidjs to v10 ([dc170e6](https://github.com/nuxtus/create-nuxtus/commit/dc170e669f3aad24ce49b468d82970f5173cd2d6))
+* **deps:** update dependency liquidjs to v10.10.0 ([88a18fd](https://github.com/nuxtus/create-nuxtus/commit/88a18fd471a223640ee8055bbbe368d422478707))
+* **deps:** update dependency liquidjs to v10.10.1 ([ec5092a](https://github.com/nuxtus/create-nuxtus/commit/ec5092aa9901a29a3b5deea170afcedb93ed471f))
+* **deps:** update dependency nanoid to v4.0.2 ([df38c42](https://github.com/nuxtus/create-nuxtus/commit/df38c42a1420ee30c2f0feca20bb2dc0cad98b60))
+* **deps:** update dependency nanoid to v5 ([a18ff22](https://github.com/nuxtus/create-nuxtus/commit/a18ff229da00150dd941fcb9350896182032e2db))
+* **deps:** update dependency nanoid to v5.0.6 ([7ca89e7](https://github.com/nuxtus/create-nuxtus/commit/7ca89e791c4eab8aa2a81cfe3a19eb9e6ed28d0a))
+* **deps:** update dependency nunjucks to v3.2.4 ([e068ddc](https://github.com/nuxtus/create-nuxtus/commit/e068ddcbe6f85cd21ecc7404d5052593bd47b524))
+* **deps:** update dependency ora to v8 ([8bc5d44](https://github.com/nuxtus/create-nuxtus/commit/8bc5d44b8c2036a7e230df370dbe7069a0f383dc))
+* **deps:** update dependency tslib to ~2.6.0 ([c08c6d0](https://github.com/nuxtus/create-nuxtus/commit/c08c6d0661e9434e771be6a61c2f601a6248d8d0))
+* **deps:** update dependency uuid to v9 ([6629558](https://github.com/nuxtus/create-nuxtus/commit/6629558f2645df977f25770d669338029ebabe0a))
+* **deps:** update dependency uuid to v9.0.1 ([a13807b](https://github.com/nuxtus/create-nuxtus/commit/a13807b90ee4d62bb35ebc1a70bfc1b2c0fbfe0f))
+
+
+### Features
+
+* :arrow_up: update to Node 20 ([234566a](https://github.com/nuxtus/create-nuxtus/commit/234566a10dfdbaf172503f705763112a7b2803b1))
+* :rocket: remove renocate.json in cleanup ([a0121c5](https://github.com/nuxtus/create-nuxtus/commit/a0121c564c17058afa466a2b46967379ad43e544))
+* :sparkles: testing for requirements before install starts ([b1d69ed](https://github.com/nuxtus/create-nuxtus/commit/b1d69ed3e8ff48f3e4b91a9023b1fdf08d767414))
+
+
+### BREAKING CHANGES
+
+* Using Node 20 and Directus SDK instead of nuxt-directus
+
 ## [1.3.1](https://github.com/nuxtus/create-nuxtus/compare/v1.3.0...v1.3.1) (2022-11-10)
 
 
