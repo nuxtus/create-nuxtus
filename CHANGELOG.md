@@ -1,5 +1,12 @@
 Changelog
 
+## [2.0.1](https://github.com/nuxtus/create-nuxtus/compare/v2.0.0...v2.0.1) (2024-02-23)
+
+
+### Bug Fixes
+
+* :bug: new line character fixes underline on cli ([cd03633](https://github.com/nuxtus/create-nuxtus/commit/cd036330ff4ff505d75a2f8038e7fef9f9e8072f))
+
 # [2.0.0](https://github.com/nuxtus/create-nuxtus/compare/v1.3.1...v2.0.0) (2024-02-21)
 
 
