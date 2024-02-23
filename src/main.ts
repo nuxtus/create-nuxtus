@@ -211,7 +211,7 @@ async function main(): Promise<void> {
         chalk.white(`cd ${projectName}` + '\nnpm start\n\n') +
         chalk.green(
           'For documentation see: ',
-          chalk.underline('https://docs.nuxtus.com', '\n'),
+          chalk.underline('https://docs.nuxtus.com\n'),
         ),
     );
   });
