@@ -1,5 +1,14 @@
 Changelog
 
+## [2.0.2](https://github.com/nuxtus/create-nuxtus/compare/v2.0.1...v2.0.2) (2024-07-01)
+
+
+### Bug Fixes
+
+* :bug: Force Node 20 ([47239af](https://github.com/nuxtus/create-nuxtus/commit/47239afc8e4671f68d76bd160afca6c33e070045))
+* **deps:** update dependency figlet to v1.7.0 ([29b6fe1](https://github.com/nuxtus/create-nuxtus/commit/29b6fe1fa78c4d7f9eb67ce1ec3ed363f9495a40))
+* **deps:** update dependency nunjucks to v3.2.4 ([e831f6c](https://github.com/nuxtus/create-nuxtus/commit/e831f6c7888598a6a62c2d8e5df67c8620c332fe))
+
 ## [2.0.1](https://github.com/nuxtus/create-nuxtus/compare/v2.0.0...v2.0.1) (2024-02-23)
 
 
