@@ -1,7 +1,7 @@
 {
   "name": "create-nuxtus",
   "description": "npx command for generating a new Nuxtus boilerplate website.",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "exports": "./build/src/main.js",
   "type": "module",
   "engines": {

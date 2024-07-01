@@ -1,5 +1,12 @@
 Changelog
 
+## [2.1.2](https://github.com/nuxtus/create-nuxtus/compare/v2.1.1...v2.1.2) (2024-07-01)
+
+
+### Bug Fixes
+
+* :bug: fix location of package.json copy ([e6ed955](https://github.com/nuxtus/create-nuxtus/commit/e6ed955b9922933631803c7a18e9e71079256886))
+
 ## [2.1.1](https://github.com/nuxtus/create-nuxtus/compare/v2.1.0...v2.1.1) (2024-07-01)
 
 
