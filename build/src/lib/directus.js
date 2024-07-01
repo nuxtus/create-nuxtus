@@ -20,7 +20,7 @@ export function installDirectusHook() {
         const dest = path.join(subDestDist, 'index.js');
         const indexFile = path.join(source, 'dist', 'index.js');
         fs.copyFileSync(indexFile, dest);
-        fs.copyFileSync(path.join(source, 'package.json'), subDest);
+        fs.copyFileSync(path.join(source, 'package.json'), path.join(subDest, 'package.json'));
         hookSpinner.succeed('Nuxtus hook installed.');
     }
     catch (err) {
