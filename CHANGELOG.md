@@ -1,5 +1,15 @@
 Changelog
 
+## [2.1.1](https://github.com/nuxtus/create-nuxtus/compare/v2.1.0...v2.1.1) (2024-07-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency inquirer to v9.3.2 ([69a1f41](https://github.com/nuxtus/create-nuxtus/commit/69a1f4160c500eb41331d4fe5821b2681facded7))
+* **deps:** update dependency joi to v17.13.3 ([5da2f8f](https://github.com/nuxtus/create-nuxtus/commit/5da2f8fef84d7e13eb35fc06ba48822438a8544c))
+* **deps:** update dependency liquidjs to v10.14.0 ([7c6a8b5](https://github.com/nuxtus/create-nuxtus/commit/7c6a8b5e6226a2147482d6e73c0bf7cde3c4f68e))
+* **deps:** update dependency nanoid to v5.0.7 ([affb46a](https://github.com/nuxtus/create-nuxtus/commit/affb46aff65e1947f782917bafa6c5ada06a4c3c))
+
 # [2.1.0](https://github.com/nuxtus/create-nuxtus/compare/v2.0.2...v2.1.0) (2024-07-01)
 
 ## [2.0.2](https://github.com/nuxtus/create-nuxtus/compare/v2.0.1...v2.0.2) (2024-07-01)
