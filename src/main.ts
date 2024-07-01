@@ -34,13 +34,13 @@ const currentNodeVersion = process.versions.node;
 const semver = currentNodeVersion.split('.');
 const major = Number(semver[0]);
 
-if (major < 16) {
+if (major < 20) {
   console.error(
     chalk.red(
       'You are running Node ' +
         currentNodeVersion +
         '.\n' +
-        'Create Nuxtus requires Node 16 or higher. \n' +
+        'Create Nuxtus requires Node 20 or higher. \n' +
         'Please update your version of Node.',
     ),
   );
