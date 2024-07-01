@@ -19,11 +19,11 @@ import ora from 'ora';
 const currentNodeVersion = process.versions.node;
 const semver = currentNodeVersion.split('.');
 const major = Number(semver[0]);
-if (major < 16) {
+if (major < 20) {
     console.error(chalk.red('You are running Node ' +
         currentNodeVersion +
         '.\n' +
-        'Create Nuxtus requires Node 16 or higher. \n' +
+        'Create Nuxtus requires Node 20 or higher. \n' +
         'Please update your version of Node.'));
     process.exit(1);
 }
@@ -145,7 +145,7 @@ async function main() {
             chalk.white.bold('Nuxtus\n') +
             chalk.green.underline('http://localhost:3000\n\n') +
             chalk.white(`cd ${projectName}` + '\nnpm start\n\n') +
-            chalk.green('For documentation see: ', chalk.underline('https://docs.nuxtus.com', '\n')));
+            chalk.green('For documentation see: ', chalk.underline('https://docs.nuxtus.com\n')));
     });
 }
 main();
