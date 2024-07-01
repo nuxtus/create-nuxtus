@@ -1,4 +1,3 @@
-// https://github.com/directus/directus/blob/31a217595c3b9134bc334f300992027d3bfdf09e/api/src/cli/utils/create-env/index.ts
 import { Liquid } from 'liquidjs';
 import fs from 'fs';
 import { nanoid } from 'nanoid';
@@ -43,4 +42,3 @@ export default async function createEnv(client, credentials, directory, user) {
     await writeFile(path.join(directory, '.env'), text);
     await fchmod(await open(path.join(directory, '.env'), 'r+'), 0o640);
 }
-//# sourceMappingURL=create-env.js.map

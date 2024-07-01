@@ -10,10 +10,6 @@ export var ProjectType;
     ProjectType["Directus"] = "server";
     ProjectType["Nuxt"] = "client";
 })(ProjectType || (ProjectType = {}));
-/**
- * Replace the name "server" with the project name supplied by user
- * @param projectName
- */
 export function updatePackageJson(projectName, projectTye) {
     const packageJson = path.join(process.cwd(), projectTye, "package.json");
     const packageJsonContent = fs.readFileSync(packageJson, "utf8");
@@ -78,11 +74,9 @@ export async function cleanUp(projectName) {
             const liquidEngine = new Liquid({
                 extname: '.liquid',
             });
-            // Create .gitignore
             const gitignoreTemplateString = fs.readFileSync(path.join(process.cwd(), "templates", 'gitignore.liquid'), "utf8");
             const gitignoreTemplate = liquidEngine.parseAndRenderSync(gitignoreTemplateString);
             fs.writeFileSync(path.join(process.cwd(), '.gitignore'), gitignoreTemplate);
-            // Create initial package.json
             const packageTemplateString = fs.readFileSync(path.join(process.cwd(), "templates", 'package.json.liquid'), "utf8");
             const text = liquidEngine.parseAndRenderSync(packageTemplateString, {
                 appName: projectName
@@ -96,4 +90,3 @@ export async function cleanUp(projectName) {
         resolve();
     });
 }
-//# sourceMappingURL=util.js.map
