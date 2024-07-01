@@ -1,24 +1,27 @@
-import * as fs from "fs";
-import * as path from "path";
-import { exec, execSync, spawn } from "child_process";
-import ora from "ora";
+import * as fs from 'fs';
+import * as path from 'path';
+import { exec, execSync, spawn } from 'child_process';
+import ora from 'ora';
 export function startDirectus() {
-    spawn("npx", ["directus", "start"], {
-        cwd: "./server",
+    spawn('npx', ['directus', 'start'], {
+        cwd: './server',
     });
 }
 export function installDirectusHook() {
-    const hookSpinner = ora("Installing Nuxtus hook...").start();
+    const hookSpinner = ora('Installing Nuxtus hook...').start();
     try {
         execSync(`cd server && npm install @nuxtus/directus-extension-nuxtus-hook --save-dev`, {
-            stdio: "ignore",
+            stdio: 'ignore',
         });
-        const source = path.join("server", "node_modules", "@nuxtus", "directus-extension-nuxtus-hook", "dist", "index.js");
-        const subDest = path.join("server", "extensions", "hooks", "directus-extension-nuxtus-hook");
-        fs.mkdirSync(subDest, { recursive: true });
-        const dest = path.join(subDest, "index.js");
-        fs.copyFileSync(source, dest);
-        hookSpinner.succeed("Nuxtus hook installed.");
+        const source = path.join('server', 'node_modules', '@nuxtus', 'directus-extension-nuxtus-hook');
+        const subDest = path.join('server', 'extensions', 'directus-extension-nuxtus-hook');
+        const subDestDist = path.join(subDest, 'dist');
+        fs.mkdirSync(subDestDist, { recursive: true });
+        const dest = path.join(subDestDist, 'index.js');
+        const indexFile = path.join(source, 'dist', 'index.js');
+        fs.copyFileSync(indexFile, dest);
+        fs.copyFileSync(path.join(source, 'package.json'), subDest);
+        hookSpinner.succeed('Nuxtus hook installed.');
     }
     catch (err) {
         // console.error(chalk.red(`Failed installing Nuxtus hook: ${err}`))
@@ -27,7 +30,7 @@ export function installDirectusHook() {
 }
 export async function installDirectus() {
     return new Promise((resolve, reject) => {
-        exec("cd server && npm install", (error) => {
+        exec('cd server && npm install', (error) => {
             if (error) {
                 reject(error);
             }
