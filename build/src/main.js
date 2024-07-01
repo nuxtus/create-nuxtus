@@ -13,9 +13,6 @@ import figlet from 'figlet';
 import { getDriverForClient } from './lib/directus-init/drivers.js';
 import inquirer from 'inquirer';
 import ora from 'ora';
-/************
- * Some initial checks if we can run Nuxtus install script
- */
 const currentNodeVersion = process.versions.node;
 const semver = currentNodeVersion.split('.');
 const major = Number(semver[0]);
@@ -51,7 +48,6 @@ const git_repo = 'https://github.com/nuxtus/nuxtus';
 const branch = process.env.NUXTUS_BRANCH || 'main';
 try {
     fs.mkdirSync(projectPath);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }
 catch (err) {
     if (err.code === 'EEXIST') {
@@ -77,11 +73,10 @@ async function main() {
             console.log(chalk.red("Prompt couldn't be rendered in the current environment"));
         }
         else {
-            // Something else went wrong
             console.log(chalk.red(error));
         }
     }
-    console.log(''); // empty line between Directus questions and status messages
+    console.log('');
     const nuxtusSpinner = ora('Downloading Nuxtus boilerplate...').start();
     try {
         execSync(`git clone --depth 1 -b ${branch} ${git_repo} ${projectPath}`, {
@@ -99,13 +94,11 @@ async function main() {
     const rmSpinner = ora('Optimising boilerplate...').start();
     const directus = installDirectus()
         .then(async () => {
-        // Replace "name": "server" in package.json with "name": ${packageName}
         await updatePackageJson(projectName, ProjectType.Directus);
         await createEnv(dbClient, credentials, rootPath, {
             email: options.email,
             password: options.password,
         });
-        // Run the boilerplate install script here
         execSync('cd server && npm run cli bootstrap', {
             stdio: 'ignore',
         });
@@ -149,4 +142,3 @@ async function main() {
     });
 }
 main();
-//# sourceMappingURL=main.js.map

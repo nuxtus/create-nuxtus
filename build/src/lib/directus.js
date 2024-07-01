@@ -24,7 +24,6 @@ export function installDirectusHook() {
         hookSpinner.succeed('Nuxtus hook installed.');
     }
     catch (err) {
-        // console.error(chalk.red(`Failed installing Nuxtus hook: ${err}`))
         throw `Failed installing Nuxtus hook: ${err}`;
     }
 }
@@ -43,4 +42,3 @@ export async function installDBDriver(dbClient) {
     await exec(`cd server && npm install ${dbClient} --production`);
     spinnerDriver.stop();
 }
-//# sourceMappingURL=directus.js.map
