@@ -94,9 +94,7 @@ async function main() {
         nuxtusSpinner.fail(chalk.red(`Failed cloning Nuxtus repo: ${error}`));
         process.exit();
     }
-    const directusSpinner = ora('Installing Directus...').start();
-    const nuxtSpinner = ora('Installing Nuxt...').start();
-    const rmSpinner = ora('Optimising boilerplate...').start();
+    const setupSpinner = ora('Installing Directus, Nuxt, and customising boilerplate...').start();
     const directus = installDirectus()
         .then(async () => {
         // Replace "name": "server" in package.json with "name": ${packageName}
@@ -110,10 +108,9 @@ async function main() {
             stdio: 'ignore',
         });
         await installDirectusHook();
-        directusSpinner.succeed('Directus installed.');
     })
         .catch((error) => {
-        directusSpinner.fail(`Failed installing Directus: ${error}`);
+        setupSpinner.fail(`Failed installing Directus: ${error}`);
         process.exit(1);
     });
     const nuxt = installNuxt(options.directusURL, options.email, options.password)
@@ -122,21 +119,18 @@ async function main() {
         if (options.directusURL !== 'http://localhost:8055') {
             installLocaltunnel();
         }
-        nuxtSpinner.succeed('Nuxt installed.');
     })
         .catch((error) => {
-        nuxtSpinner.fail(chalk.red(`Failed installing Nuxt: ${error}`));
+        setupSpinner.fail(chalk.red(`Failed installing Nuxt: ${error}`));
         process.exit(1);
     });
     const cleanup = cleanUp(projectName)
-        .then(() => {
-        rmSpinner.succeed('Boilerplate customised.');
-    })
         .catch((error) => {
-        rmSpinner.fail(chalk.red(`Failed removing unused files: ${error}`));
+        setupSpinner.fail(chalk.red(`Failed removing unused files: ${error}`));
         process.exit(1);
     });
     Promise.all([directus, nuxt, cleanup]).then(() => {
+        setupSpinner.succeed('Directus installed, Nuxt installed, and boilerplate customised.');
         execSync(`npx rimraf ./templates`);
         console.log('\n');
         console.log(chalk.green('🚀 Nuxtus site is ready for use!\n\n') +
