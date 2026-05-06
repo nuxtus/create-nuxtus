@@ -71,7 +71,7 @@ const encrypt = (): Record<string, string | boolean> => ({
 const ssl = (): Record<string, string | boolean> => ({
   type: 'confirm',
   name: 'ssl',
-  message: 'Enable SSL:',
+  message: 'Enable SSL for database connection:',
   default: false,
 });
 

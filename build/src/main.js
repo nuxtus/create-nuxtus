@@ -112,7 +112,7 @@ async function main() {
         });
         // Run the boilerplate install script here
         execSync('cd server && npm run cli bootstrap', {
-            stdio: 'ignore',
+            stdio: 'inherit',
         });
         await installDirectusHook();
         taskDone('Directus');

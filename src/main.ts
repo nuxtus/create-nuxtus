@@ -173,7 +173,7 @@ async function main(): Promise<void> {
 
       // Run the boilerplate install script here
       execSync('cd server && npm run cli bootstrap', {
-        stdio: 'ignore',
+        stdio: 'inherit',
       });
       await installDirectusHook();
       taskDone('Directus');
@@ -209,6 +209,14 @@ async function main(): Promise<void> {
     spinner.succeed('Setup complete.');
     execSync(`npx rimraf ./templates`);
     console.log('\n');
+    if (credentials?.ssl) {
+      console.log(
+        chalk.yellow(
+          '⚠ SSL enabled with rejectUnauthorized=false (development convenience).\n' +
+            '  For production, provide certificates in server/.env\n',
+        ),
+      );
+    }
     console.log(
       chalk.green('🚀 Nuxtus site is ready for use!\n\n') +
         chalk.white.bold('Directus\n') +

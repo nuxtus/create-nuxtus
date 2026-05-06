@@ -43,14 +43,29 @@ export default async function createEnv(
     config.database[`DB_${key.toUpperCase()}`] = value;
   }
 
+  let sslEnabled = false;
+  if (credentials.ssl === true) {
+    sslEnabled = true;
+    config.database['DB_SSL__REJECT_UNAUTHORIZED'] = 'false';
+  }
   const configAsStrings: Record<string, string> = {};
 
   for (const [key, value] of Object.entries(config)) {
     configAsStrings[key] = '';
 
     for (const [envKey, envValue] of Object.entries(value)) {
+      if (envKey === 'DB_SSL__REJECT_UNAUTHORIZED') {
+        configAsStrings[key] += `# WARNING: rejectUnauthorized=false disables certificate verification (MITM risk)\n`;
+        configAsStrings[key] += `# For production, provide certificates below instead:\n`;
+      }
       configAsStrings[key] += `${envKey}="${envValue}"\n`;
     }
+  }
+
+  if (sslEnabled) {
+    configAsStrings['database'] += `# DB_SSL__CA="/path/to/ca-cert.pem"\n`;
+    configAsStrings['database'] += `# DB_SSL__CERT="/path/to/client-cert.pem"\n`;
+    configAsStrings['database'] += `# DB_SSL__KEY="/path/to/client-key.pem"\n`;
   }
 
   configAsStrings['user'] =

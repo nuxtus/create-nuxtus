@@ -53,7 +53,7 @@ const encrypt = () => ({
 const ssl = () => ({
     type: 'confirm',
     name: 'ssl',
-    message: 'Enable SSL:',
+    message: 'Enable SSL for database connection:',
     default: false,
 });
 export const databaseQuestions = {

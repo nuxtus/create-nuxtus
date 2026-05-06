@@ -29,6 +29,9 @@ export default async function createEnv(client, credentials, directory, user) {
     for (const [key, value] of Object.entries(credentials)) {
         config.database[`DB_${key.toUpperCase()}`] = value;
     }
+    if (credentials.ssl === true) {
+        config.database['DB_SSL__REJECT_UNAUTHORIZED'] = 'false';
+    }
     const configAsStrings = {};
     for (const [key, value] of Object.entries(config)) {
         configAsStrings[key] = '';
